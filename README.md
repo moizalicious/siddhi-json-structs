@@ -51,7 +51,7 @@ JSON structure for the 'delete' query output type:
 {
   "type*": "delete",
   "target*": "",
-  "for": "current events|expired events|all events", // Optional
+  "for": "current events|expired events|all events",
   "on*": ""
 }
 ```
@@ -61,8 +61,8 @@ JSON structure for the 'update' query output type:
 {
   "type*": "update",
   "target*": "",
-  "for": "current events|expired events|all events", // Optional
-  "clause": "", // Optional
+  "for": "current events|expired events|all events",
+  "clause": "",
   "on*": ""
 }
 ```
