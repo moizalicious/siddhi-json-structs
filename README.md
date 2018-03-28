@@ -1,7 +1,15 @@
-# JSON Structures To Define Siddhi
+# JSON Structures To Define Siddhi Apps
 
 ## General Types
 These are the structures that are used in most of the siddhi elements, so they have been written here as general structs because the following structs have been used in two or more siddhi element definitions.
+
+### Key-Value Pair JSON
+```
+{
+    `key`: `value`,
+    ...
+}
+```
 
 ### Attributes
 Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure which is named `attributeList` where ever they are used in a element definition.
@@ -22,16 +30,13 @@ All annotations have somewhat the same structure, so annotations are shown in an
     {
         name*: ‘’,
         type*: ‘list’,
-        values*: [‘value1’,...]
+        values*: ['value1',...]
     },
     << and|or >>
     {
         name*: ‘’
         type*: ‘map’,
-        values*: {
-            ‘option’:’value’,
-            ...
-        }
+        values*: {Key-Value Pair JSON}
     },
     ...
 ]
@@ -39,76 +44,55 @@ All annotations have somewhat the same structure, so annotations are shown in an
 ```
 **Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different structure and are show seperately**
 
-### Stores
+### Store
 The store annotation is only used for tables and aggregations. So they are only defined in both table and aggregation structs as the name `store` in the following format:
 ```
 {
     type: ‘’,
-    options: {
-        ‘option’: ‘value’,
-        ...
-    }
+    options: {Key-Value Pair JSON}
 }
 ```
 
-## Stream
+## Stream Definition
 ```
 id: '',
 name: '',
 isInnerStream: true|false,
-attributeList: *Attributes Struct*,
-annotationList: *Annotation Struct*
+attributeList: {Attributes JSON Array},
+annotationList: {Annotations JSON Array}
 ```
 
-## Source
+## Source Definition
 ```
 id: ‘’,
 type: ‘’,
-options: {
-    ‘option’: ‘value’,
-    ... 
-},
+options: {Key-Value Pair JSON},
 map: {
     type: ‘’,
-    options: {
-        ‘option’: ‘value’,
-        ...
-    }
+    options: {Key-Value Pair JSON},
     attributes: {
         type: ‘map’
-        value: {
-            ‘attribute1’: ‘value1’,
-            ...
-        }
+        value: {Key-Value Pair JSON}
     }
     << or >>
     attributes: {
         type: ‘list’
-        value: [‘value1’,...]
+        value: ['value1',...]
     }
 }
 ```
 
-## Sink
+## Sink Definition
 ```
 id: ‘’,
 type: ‘’,
-options: {
-    ‘option’: ‘value’,
-    ...
-},
+options: {Key-Value Pair JSON},
 map: {
     type: ‘’,
-    options: {
-        ‘option’: ‘value’,
-        ...
-    },
+    options: {Key-Value Pair JSON},
     payload: {
         type: ‘map’,
-        value: {
-          ‘key’: ‘value’,
-          ...
-        } 
+        value: {Key-Value Pair JSON}
     }
     << or  >>
     payload: {
@@ -118,35 +102,35 @@ map: {
 }
 ```
 
-## Table
+## Table Definition
 ```
 id: ‘’,
 name: ‘’,
-attributeList: *Attributes Struct*,
-store: *Store Struct*,
-annotationList: *Annotation Struct*
+attributeList: {Attributes JSON Array},
+store: {Store JSON},
+annotationList: {Annotations JSON Array}
 ```
 
-## Window
+## Window Definition
 ```
     id: ‘’,
     name: ‘’,
-    attributeList: *Attributes Struct*,
+    attributeList: {Attributes JSON Array},
     type: ‘’,
-    parameters: [‘param1’,..],
+    parameters: ['value1',...],
     outputEventType: ‘{current events|expired events|all events}’,
-    annotationList: *Annotations Struct*
+    annotationList: {Annotations JSON Array}
 ```
 
-## Trigger
+## Trigger Definition
 ```
     id: ‘’,
     name: ‘’,
     at: ‘{every|start|cron-expression}’
-    annotationList: *Annotations Struct*
+    annotationList: {Annotations JSON Array}
 ```
 
-## Aggregation
+## Aggregation Definition
 ```
 id: ‘’,
    name: ‘’,
@@ -164,22 +148,21 @@ id: ‘’,
        timeStamp: ‘’,
        timePeriod: ‘’
    },
-   store: *Store Struct*,
-   annotationList: *Annotation Struct*
+   store: {Store JSON},
+   annotationList: {Annotations JSON Array}
 ```
 
 
-## Query
+## Query Definition
 A query has the following body structure
-
 ```
 {
     id*: '',
-    queryInput*: {},
-    select*: {},
-    groupBy: [], 
+    queryInput*: {Query Input JSON},
+    select*: {Query Select JSON},
+    groupBy: ['value1',...], 
     having: '',
-    queryOutput*: {}
+    queryOutput*: {Query Output JSON}
 }
 ```
 
@@ -242,8 +225,7 @@ Query input can be of the following types:
 }
 ```
 
-
-### Select Struct
+### Query Select
 ```
 {
     type*: 'user defined',
@@ -259,8 +241,6 @@ Query input can be of the following types:
     value*: '*'
 }
 ```
-
-
 
 ### Query Output
 Query Output Can Have 4 different output types:
@@ -281,7 +261,7 @@ Query Output Can Have 4 different output types:
 **JSON structure for the `delete` query output type:**
 ```
 {
-    type*: delete,
+    type*: 'delete',
     target*: '',
     for: 'current events|expired events|all events',
     on*: ''
@@ -308,4 +288,9 @@ Query Output Can Have 4 different output types:
     clause: '',
     on*: ''
 }
+```
+
+## Partition Definition
+```
+
 ```
