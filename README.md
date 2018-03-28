@@ -5,12 +5,12 @@ A query has the following body structure
 
 ```json
 {
-  "id": "",
-  "queryInput": {},
-  "select": {}, // Optional
-  "groupBy": [], // Optional
-  "having": "", // Optional
-  "queryOutput": {}
+  "id*": "",
+  "queryInput*": {},
+  "select": {},
+  "groupBy": [], 
+  "having": "",
+  "queryOutput*": {}
 }
 ```
 
@@ -40,30 +40,30 @@ Query Output Can Have 4 different output types:
 JSON structure for 'insert' query output type:
 ```json
 {
-  "type": "insert",
-  "insert": "current events|expired events|all events",
-  "into": ""
+  "type*": "insert",
+  "insert*": "current events|expired events|all events",
+  "into*": ""
 }
 ```
 
 JSON structure for the 'delete' query output type:
 ```json
 {
-  "type": "delete",
-  "target": "",
+  "type*": "delete",
+  "target*": "",
   "for": "current events|expired events|all events", // Optional
-  "on": ""
+  "on*": ""
 }
 ```
 
 JSON structure for the 'update' query output type:
 ```json
 {
-  "type": "update",
-  "target": "",
+  "type*": "update",
+  "target*": "",
   "for": "current events|expired events|all events", // Optional
   "clause": "", // Optional
-  "on": ""
+  "on*": ""
 }
 ```
 
@@ -71,10 +71,10 @@ JSON structure for the `update or insert` query output type:
 
 ```json
 {
-  "type": "update or insert",
-  "target": "",
+  "type*": "update or insert",
+  "target*": "",
   "for": "current events|expired events|all events",
   "clause": "",
-  "on": ""
+  "on*": ""
 }
 ```
