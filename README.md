@@ -1,18 +1,15 @@
-# JSON Structures For The Design View Of The Stream Processor Editor
+# JSON Structures To Define Siddhi
 
 ## General Types
+These are the structures that are used in most of the siddhi elements, so they have been written here as general structs because the following structs have been used in two or more siddhi element definitions.
 
 ### Attributes
-Attributes of a Stream, Table etc.. have the same format. So they all use the same structure which is named `attributeList` where ever they are used in a element definition.
+Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure which is named `attributeList` where ever they are used in a element definition.
 ```
 [
     {
-        name: ‘’,
-        type: ‘’
-    },
-    {
-            name: ‘’,
-            type: ‘’
+        name*: ‘’,
+        type*: ‘string|int|long|double|float|bool|object’
     },
     ...
 ]
@@ -25,13 +22,16 @@ All annotations have somewhat the same structure, so annotations are shown in an
     {
         name*: ‘’,
         type*: ‘list’,
-        values*: [‘value1’,’value2’]
+        values*: [‘value1’,...]
     },
-    *and|or*
+    << and|or >>
     {
         name*: ‘’
         type*: ‘map’,
-        values*: {‘option’:’value’}
+        values*: {
+            ‘option’:’value’,
+            ...
+        }
     },
     ...
 ]
@@ -40,12 +40,13 @@ All annotations have somewhat the same structure, so annotations are shown in an
 **Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different structure and are show seperately**
 
 ### Stores
-The store annotation is only used for tables and aggregations. So they are only defined in both table and aggregation structs in the following format:
+The store annotation is only used for tables and aggregations. So they are only defined in both table and aggregation structs as the name `store` in the following format:
 ```
 {
     type: ‘’,
     options: {
-        ‘option’: ‘value’
+        ‘option’: ‘value’,
+        ...
     }
 }
 ```
@@ -54,10 +55,9 @@ The store annotation is only used for tables and aggregations. So they are only 
 ```
 id: '',
 name: '',
-isInnerStream: {boolean},
+isInnerStream: true|false,
 attributeList: *Attributes Struct*,
 annotationList: *Annotation Struct*
-
 ```
 
 ## Source
@@ -65,25 +65,26 @@ annotationList: *Annotation Struct*
 id: ‘’,
 type: ‘’,
 options: {
-    ‘option’: ‘value’ 
+    ‘option’: ‘value’,
+    ... 
 },
 map: {
     type: ‘’,
     options: {
-        ‘option’: ‘value’
+        ‘option’: ‘value’,
+        ...
     }
     attributes: {
-        ‘name’: ‘attributes’,
-        ‘type’: ‘map’
-        ‘value’: {
-            ‘attribute1’: ‘value1’
+        type: ‘map’
+        value: {
+            ‘attribute1’: ‘value1’,
+            ...
         }
     }
-    **or**
+    << or >>
     attributes: {
-        ‘name’: ‘attributes’,
-        ‘type’: ‘list’
-        ‘value’: [‘value1’, ‘value2’]
+        type: ‘list’
+        value: [‘value1’,...]
     }
 }
 ```
@@ -93,22 +94,27 @@ map: {
 id: ‘’,
 type: ‘’,
 options: {
-    ‘option’: ‘value’
+    ‘option’: ‘value’,
+    ...
 },
 map: {
     type: ‘’,
     options: {
-        ‘option’: ‘value’
+        ‘option’: ‘value’,
+        ...
     },
     payload: {
-        name: ‘payload’,
         type: ‘map’,
         value: {
-          ‘key’: ‘value’
+          ‘key’: ‘value’,
+          ...
         } 
     }
-    or
-    payload: ‘’
+    << or  >>
+    payload: {
+        type: 'single',
+        value: ''
+    }
 }
 ```
 
@@ -124,12 +130,12 @@ annotationList: *Annotation Struct*
 ## Window
 ```
     id: ‘’,
-   name: ‘’,
-   attributeList: *Attributes Struct*,
-   type: ‘’,
-   parameters: [‘param1’, ‘param2’],
-   outputEventType: ‘{current events|expired events|all events}’,
-   annotationList: *Annotations Struct*
+    name: ‘’,
+    attributeList: *Attributes Struct*,
+    type: ‘’,
+    parameters: [‘param1’,..],
+    outputEventType: ‘{current events|expired events|all events}’,
+    annotationList: *Annotations Struct*
 ```
 
 ## Trigger
@@ -150,9 +156,10 @@ id: ‘’,
            name: ‘’,
            aggregateFunction: ‘’,
            attribute: ‘’
-       }
+       },
+       ...
    ],
-   groupBy: ‘’,
+   groupBy: ['value1',...],
    aggregateBy: {
        timeStamp: ‘’,
        timePeriod: ‘’
@@ -187,10 +194,11 @@ Query input can be of the following types:
 ```
 {
     type: 'window|filter|projection',
+    from: '',
     filter: '',
     window: {
         type: '',
-        parameters: ['value1', 'value2',...],
+        parameters: ['value1',...],
         filter: ''
     }
 }
@@ -205,7 +213,7 @@ Query input can be of the following types:
         filter: '',
         window: {
             type: '',
-            paramters: ['value1','value2',...],
+            paramters: ['value1',...],
             filter: ''
         },
         unidirectional: true|false
@@ -217,7 +225,7 @@ Query input can be of the following types:
             filter: '',
             window: {
                 type: '',
-                paramters: ['value1','value2',...],
+                paramters: ['value1',...],
                 filter: ''
             },
         unidirectional: true|false
@@ -226,6 +234,32 @@ Query input can be of the following types:
     on: ''
 }
 ```
+
+**JSON structure for `pattern & sequence` query input type:**
+```
+{
+    
+}
+```
+
+
+### Select Struct
+```
+{
+    type*: 'user defined',
+    value*: [
+        {
+            condition: '',
+            as: ''
+        },
+        ...
+    ]
+    << or >>
+    type*: 'all',
+    value*: '*'
+}
+```
+
 
 
 ### Query Output
@@ -238,7 +272,7 @@ Query Output Can Have 4 different output types:
 **JSON structure for `insert` query output type:**
 ```
 {
-    type*: insert,
+    type*: 'insert',
     insert*: 'current events|expired events|all events',
     into*: ''
 }
