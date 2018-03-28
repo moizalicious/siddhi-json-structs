@@ -55,64 +55,73 @@ The store annotation is only used for tables and aggregations. So they are only 
 
 ## Stream Definition
 ```
-id: '',
-name: '',
-isInnerStream: true|false,
-attributeList: {Attributes JSON Array},
-annotationList: {Annotations JSON Array}
+{
+    id: '',
+    name: '',
+    isInnerStream: true|false,
+    attributeList: {Attributes JSON Array},
+    annotationList: {Annotations JSON Array}
+}
 ```
 
 ## Source Definition
 ```
-id: ‘’,
-type: ‘’,
-options: {Key-Value Pair JSON},
-map: {
+{
+    id: ‘’,
     type: ‘’,
     options: {Key-Value Pair JSON},
-    attributes: {
-        type: ‘map’
-        value: {Key-Value Pair JSON}
-    }
-    << or >>
-    attributes: {
-        type: ‘list’
-        value: ['value1',...]
+    map: {
+        type: ‘’,
+        options: {Key-Value Pair JSON},
+        attributes: {
+            type: ‘map’
+            value: {Key-Value Pair JSON}
+        }
+        << or >>
+        attributes: {
+            type: ‘list’
+            value: ['value1',...]
+        }
     }
 }
 ```
 
 ## Sink Definition
 ```
-id: ‘’,
-type: ‘’,
-options: {Key-Value Pair JSON},
-map: {
+{
+    id: ‘’,
     type: ‘’,
     options: {Key-Value Pair JSON},
-    payload: {
-        type: ‘map’,
-        value: {Key-Value Pair JSON}
-    }
-    << or  >>
-    payload: {
-        type: 'single',
-        value: ''
+    map: {
+        type: ‘’,
+        options: {Key-Value Pair JSON},
+        payload: {
+            type: ‘map’,
+            value: {Key-Value Pair JSON}
+        }
+        << or  >>
+        payload: {
+            type: 'single',
+            value: ''
+        }
     }
 }
 ```
 
 ## Table Definition
 ```
-id: ‘’,
-name: ‘’,
-attributeList: {Attributes JSON Array},
-store: {Store JSON},
-annotationList: {Annotations JSON Array}
+{
+    id: ‘’,
+    name: ‘’,
+    attributeList: {Attributes JSON Array},
+    store: {Store JSON},
+    annotationList: {Annotations JSON Array}
+}
 ```
 
 ## Window Definition
 ```
+{
     id: ‘’,
     name: ‘’,
     attributeList: {Attributes JSON Array},
@@ -120,36 +129,41 @@ annotationList: {Annotations JSON Array}
     parameters: ['value1',...],
     outputEventType: ‘{current events|expired events|all events}’,
     annotationList: {Annotations JSON Array}
+}
 ```
 
 ## Trigger Definition
 ```
+{
     id: ‘’,
     name: ‘’,
     at: ‘{every|start|cron-expression}’
     annotationList: {Annotations JSON Array}
+}
 ```
 
 ## Aggregation Definition
 ```
-id: ‘’,
-   name: ‘’,
-   from: ‘’,
-   select: [
-       {
-           name: ‘’,
-           aggregateFunction: ‘’,
-           attribute: ‘’
-       },
-       ...
-   ],
-   groupBy: ['value1',...],
-   aggregateBy: {
-       timeStamp: ‘’,
-       timePeriod: ‘’
-   },
-   store: {Store JSON},
-   annotationList: {Annotations JSON Array}
+{
+    id: ‘’,
+    name: ‘’,
+    from: ‘’,
+    select: [
+        {
+            name: ‘’,
+            aggregateFunction: ‘’,
+            attribute: ‘’
+        },
+        ...
+    ],
+    groupBy: ['value1',...],
+    aggregateBy: {
+        timeStamp: ‘’,
+        timePeriod: ‘’
+    },
+    store: {Store JSON},
+    annotationList: {Annotations JSON Array}
+}
 ```
 
 
@@ -291,6 +305,11 @@ Query Output Can Have 4 different output types:
 ```
 
 ## Partition Definition
+```
+
+```
+
+# Full Siddhi App Definition
 ```
 
 ```
