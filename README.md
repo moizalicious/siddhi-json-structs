@@ -83,8 +83,8 @@ _Example: `@Async(buffer.size='1024') @PrimaryKey('name','age')`_
 The store annotation is only used for tables and aggregations. So they are only defined in both table and aggregation structs as the name `store` in the following format:
 ```
 {
-    type: ‘’,
-    options: {Key-Value Pair JSON}
+    type*: ‘’,
+    options*: {Key-Value Pair JSON}
 }
 ```
 
@@ -182,8 +182,8 @@ _Example: `define table InTable(name string, age int);`_
     id: ‘’,
     name: ‘’,
     attributeList: {Attributes JSON Array},
-    windowType: ‘’,
-    windowParameters: ['value1',...],
+    function: ‘time|length|timeBatch|lengthBatch...’,
+    parameters: ['value1',...],
     outputEventType: ‘{current events|expired events|all events}’,
     annotationList: {Annotations JSON Array}
 }
@@ -204,8 +204,8 @@ _Example: `define window SensorWindow (name string, value float) timeBatch(1 sec
             type: 'float'
         }
     ],
-    windowType: 'timeBatch',
-    windowParameters: ['1 second'],
+    function: 'timeBatch',
+    parameters: ['1 second'],
     outputEventType: 'expired events',
     annotationsList: []
 }
