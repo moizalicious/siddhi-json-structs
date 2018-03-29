@@ -120,7 +120,7 @@ _Example: `@Store(type="rdbms",
 _Example: `@Async(buffer.size="1024") define stream InStream(name string, age int);`_
 ```
 {
-    id: '<UUID>',
+    id: 'InStream',
     name: 'InStream',
     isInnerStream: false,
     attributeList: [
@@ -145,8 +145,155 @@ _Example: `@Async(buffer.size="1024") define stream InStream(name string, age in
 }
 ```
 
+## Table Definition
+```
+{
+    id: ‘’,
+    name: ‘’,
+    attributeList: {Attributes JSON Array},
+    store: {Store JSON},
+    annotationList: {Annotations JSON Array}
+}
+```
 
-## Source Definition
+_Example: `define table InTable(name string, age int);`_
+```
+{
+    id: 'InTable',
+    name: 'InTable',
+    attributeList: [
+        {
+            name: 'name',
+            type: 'string'
+        },
+        {
+            name: 'age',
+            type: 'int'
+        }
+    ],
+    store: {},
+    annotationList: []
+}
+```
+
+## Window Definition
+```
+{
+    id: ‘’,
+    name: ‘’,
+    attributeList: {Attributes JSON Array},
+    windowType: ‘’,
+    windowParameters: ['value1',...],
+    outputEventType: ‘{current events|expired events|all events}’,
+    annotationList: {Annotations JSON Array}
+}
+```
+
+_Example: `define window SensorWindow (name string, value float) timeBatch(1 second) output expired events;`_
+```
+{
+    id: 'SensorWindow',
+    name: 'SensorWindow',
+    attributeList: [
+        {
+            name: 'name',
+            type: 'string'
+        },
+        {
+            name: 'value',
+            type: 'float'
+        }
+    ],
+    windowType: 'timeBatch',
+    windowParameters: ['1 second'],
+    outputEventType: 'expired events',
+    annotationsList: []
+}
+```
+
+## Trigger Definition
+```
+{
+    id: ‘’,
+    name: ‘’,
+    at: ‘{every|start|cron-expression}’
+    annotationList: {Annotations JSON Array}
+}
+```
+
+_Example: ` define trigger FiveMinTrigger at every 5 min;`_
+```
+{
+    id: 'FiveMinTrigger',
+    name: 'FiveMinTrigger',
+    at: 'every 5 min',
+    annotationList: []
+}
+```
+
+## Aggregation Definition (NOT FINALISED)
+```
+{
+    id*: ‘’,
+    name*: ‘’,
+    from*: ‘’,
+    select*: [
+        {
+            name: ‘’,
+            aggregateFunction: ‘’,
+            attribute: ‘’
+        },
+        ...
+    ],
+    groupBy: ['value1',...],
+    aggregateBy: {
+        timeStamp: ‘’,
+        timePeriod: ‘’
+    },
+    store: {Store JSON},
+    annotationList: {Annotations JSON Array}
+}
+```
+
+_Example: `define aggregation TradeAggregation
+             from TradeStream
+             select symbol, avg(price) as avgPrice, sum(price) as total
+               group by symbol
+               aggregate by timestamp every sec ... year;`_
+```
+{
+    id: 'TradeAggregation',
+    name: 'TradeAggregation',
+    from: 'TradeStream',
+    select: [
+        {
+            name: 'symbol',
+            aggregateFunction: '',
+            attribute: ''
+        },
+        {
+            name: 'avgPrice',
+            aggregateFunction: 'avg',
+            attribute: 'price'
+        },
+        {
+            name: 'total',
+            aggregateFunction: 'sum',
+            attribute: 'price'
+        }
+    ],
+    groupBy: ['symbol'],
+    aggregateBy: {
+        timeStamp: 'timestamp',
+        timePeriod: 'sec...year'
+    },
+    store: {},
+    annotationList: []
+}
+```
+               
+
+## Source Definition (NOT FINALISED)
 ```
 {
     id: ‘’,
@@ -188,8 +335,7 @@ _Example: `@Source(type = 'http',
 }
 ```                   
 
-
-## Sink Definition
+## Sink Definition (NOT FINALISED)
 ```
 {
     id: ‘’,
@@ -234,86 +380,7 @@ _Example: `@sink(type='http', publisher.url='http://localhost:8005/endpoint', me
 }
 ```
 
-## Table Definition
-```
-{
-    id: ‘’,
-    name: ‘’,
-    attributeList: {Attributes JSON Array},
-    store: {Store JSON},
-    annotationList: {Annotations JSON Array}
-}
-```
-
-_Example: `define table InTable(name string, age int);`_
-```
-{
-    id: '<UUID>',
-    name: 'InTable',
-    attributeList: [
-        {
-            name: 'name',
-            type: 'string'
-        },
-        {
-            name: 'age',
-            type: 'int'
-        }
-    ],
-    store: {},
-    annotationList: []
-}
-```
-
-## Window Definition
-```
-{
-    id: ‘’,
-    name: ‘’,
-    attributeList: {Attributes JSON Array},
-    type: ‘’,
-    parameters: ['value1',...],
-    outputEventType: ‘{current events|expired events|all events}’,
-    annotationList: {Annotations JSON Array}
-}
-```
-
-## Trigger Definition
-```
-{
-    id: ‘’,
-    name: ‘’,
-    at: ‘{every|start|cron-expression}’
-    annotationList: {Annotations JSON Array}
-}
-```
-
-## Aggregation Definition
-```
-{
-    id: ‘’,
-    name: ‘’,
-    from: ‘’,
-    select: [
-        {
-            name: ‘’,
-            aggregateFunction: ‘’,
-            attribute: ‘’
-        },
-        ...
-    ],
-    groupBy: ['value1',...],
-    aggregateBy: {
-        timeStamp: ‘’,
-        timePeriod: ‘’
-    },
-    store: {Store JSON},
-    annotationList: {Annotations JSON Array}
-}
-```
-
-
-## Query Definition
+## Query Definition (NOT FINALISED)
 A query has the following body structure
 ```
 {
@@ -326,7 +393,7 @@ A query has the following body structure
 }
 ```
 
-### Query Input
+### Query Input (NOT FINALISED)
 Query input can be of the following types:
 * Window|Filter|Projection
 * Join
@@ -511,7 +578,6 @@ _Structure for the `notfor` value JSON_
 _Structure for the `notand` value JSON_
 ```
 {
-    forEvery: 'true|false',
     firstStream: {
         streamName: '',
         filter: ''
@@ -525,10 +591,10 @@ _Structure for the `notand` value JSON_
 ```
 
 
-### Query Select
+### Query Select (NOT FINALISED)
 ```
 {
-    type*: 'user defined',
+    type*: 'user-defined',
     value*: [
         {
             condition: '',
@@ -542,7 +608,7 @@ _Structure for the `notand` value JSON_
 }
 ```
 
-### Query Output
+### Query Output (NOT FINALISED)
 Query Output Can Have 4 different output types:
 * Insert
 * Delete
@@ -590,12 +656,12 @@ Query Output Can Have 4 different output types:
 }
 ```
 
-## Partition Definition
+## Partition Definition (NOT FINALISED)
 ```
 
 ```
 
-# Full Siddhi App Definition
+# Full Siddhi App Definition (NOT FINALISED)
 ```
 
 ```
