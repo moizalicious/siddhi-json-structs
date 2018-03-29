@@ -234,10 +234,69 @@ Query input can be of the following types:
 
 **JSON structure for `pattern & sequence` query input type:**
 ```
+    type: 'pattern',
+    events: [
+        {
+            forEvery: 'true|false',
+            type: 'default | andor | notfor | notand',
+            value: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
+        },
+        ...
+    ]
+```
+
+_Structure for `default` value JSON_
+```
 {
-    
+    eventReference: '',
+    streamName: '',
+    filter: '',
+    minCount: '',
+    maxCount: ''
+} 
+```
+
+_Structure for `andor` value JSON_
+```
+{
+    firstStream: {
+        eventReference: '',
+        streamName: '',
+        filter: ''
+    },
+    connectedWith: 'and|or',
+    secondStream: {
+        eventReference: '',
+        streamName: '',
+        filter: ''
+    }
 }
 ```
+
+_Structure for the `notfor` value JSON_
+```
+{
+    streamName: '',
+    filter: '',
+    for: ''
+}
+```
+
+_Structure for the `notand` value JSON_
+```
+{
+    firstStream: {
+        streamName: '',
+        filter: ''
+    },
+    secondStream: {
+        eventReference: '',
+        streamName: '',
+        filter: ''
+    }
+}
+```
+
 
 ### Query Select
 ```
