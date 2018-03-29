@@ -23,6 +23,21 @@ Defines attributes of a Stream, Table etc.. that have the same format. So they a
 ]
 ```
 
+_Example: If to define the attributes `(name string, age int)` the JSON structure would look something like this,_
+```
+[
+    {
+        name: 'name',
+        type: 'string'
+    },
+    {
+        name: 'age',
+        type: 'int'
+    }
+]
+```
+
+
 ### Annotations
 All annotations have somewhat the same structure, so annotations are shown in an element definition as `annotationList` and have the following structure:
 ```
@@ -42,6 +57,25 @@ All annotations have somewhat the same structure, so annotations are shown in an
 ]
 
 ```
+
+_Example: `@Async(buffer.size='1024') @PrimaryKey('name','age')`_
+```
+[
+    {
+        name: 'Async',
+        type: 'map',
+        value: {
+            'buffer.size': '1024'
+        }
+    },
+    {
+        name: 'PrimaryKey',
+        type: 'list',
+        values: ['name', 'age']
+    }
+]
+```
+
 **Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different structure and are show seperately**
 
 ### Store
@@ -53,6 +87,24 @@ The store annotation is only used for tables and aggregations. So they are only 
 }
 ```
 
+_Example: `@Store(type="rdbms",
+                  jdbc.url="jdbc:mysql://localhost:3306/production",
+                  username="wso2",
+                  password="123" ,
+                  jdbc.driver.name="com.mysql.jdbc.Driver")`_
+```
+{
+    type: 'rdbms',
+    options: {
+        'jdbc.url': 'jdbc:mysql://localhost:3306/production',
+        'username': 'wso2',
+        'password': '123',
+        'jdbc.driver.name': 'com.mysql.jdbc.Driver'
+    }
+}
+```                  
+                  
+
 ## Stream Definition
 ```
 {
@@ -63,6 +115,35 @@ The store annotation is only used for tables and aggregations. So they are only 
     annotationList: {Annotations JSON Array}
 }
 ```
+
+_Example: `@Async(buffer.size="1024") define stream InStream(name string, age int);`_
+```
+{
+    id: '<UUID>',
+    name: 'InStream',
+    isInnerStream: false,
+    attributeList: [
+        {
+            name: 'name',
+            type: 'string'
+        },
+        {
+            name: 'age',
+            type: 'int'
+        }
+    ],
+    annotationList: [
+        {
+            name: 'Async',
+            type: 'map',
+            values: {
+                'buffer.size': '1024'
+            }
+        }
+    ]
+}
+```
+
 
 ## Source Definition
 ```
@@ -86,6 +167,27 @@ The store annotation is only used for tables and aggregations. So they are only 
 }
 ```
 
+_Example: `@Source(type = 'http',
+                   receiver.url='http://localhost:8006/productionStream',
+                   basic.auth.enabled='false',
+                   @map(type='json'))`_
+```
+{
+    id: '<UUID>',
+    type: 'http',
+    options: {
+        'receiver.url': 'http://localhost:8006/productionStream',
+        'basic.auth.enabled': 'false',
+    },
+    map: {
+        type: 'json',
+        options: {},
+        attributes: {}
+    },
+}
+```                   
+
+
 ## Sink Definition
 ```
 {
@@ -108,6 +210,29 @@ The store annotation is only used for tables and aggregations. So they are only 
 }
 ```
 
+_Example: `@sink(type='http', publisher.url='http://localhost:8005/endpoint', method='POST', headers='Accept-Date:20/02/2017', 
+             basic.auth.username='admin', basic.auth.password='admin', basic.auth.enabled='true',
+             @map(type='json'))`_
+```
+{
+    id: '<UUID>',
+    type: 'http',
+    options: {
+        'publisher.url': 'http://localhost:8005/endpoint',
+        'method': 'POST',
+        'headers': 'Accept-Date:20/02/2017',
+        'basic.auth.username': 'admin',
+        'basic.auth.password': 'admin',
+        'basic.auth.enabled': 'true'
+    },
+    map: {
+        type: 'json',
+        options: {},
+        payload: {}
+    }
+}
+```
+
 ## Table Definition
 ```
 {
@@ -116,6 +241,26 @@ The store annotation is only used for tables and aggregations. So they are only 
     attributeList: {Attributes JSON Array},
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
+}
+```
+
+_Example: `define table InTable(name string, age int);`_
+```
+{
+    id: '<UUID>',
+    name: 'InTable',
+    attributeList: [
+        {
+            name: 'name',
+            type: 'string'
+        },
+        {
+            name: 'age',
+            type: 'int'
+        }
+    ],
+    store: {},
+    annotationList: []
 }
 ```
 
@@ -234,20 +379,22 @@ Query input can be of the following types:
 
 **JSON structure for `pattern & sequence` query input type:**
 ```
+{
     type: 'pattern',
     events: [
         {
-            forEvery: 'true|false',
             type: 'default | andor | notfor | notand',
             value: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
         },
         ...
     ]
+}
 ```
 
 _Structure for `default` value JSON_
 ```
 {
+    forEvery: 'true|false',
     eventReference: '',
     streamName: '',
     filter: '',
@@ -259,6 +406,7 @@ _Structure for `default` value JSON_
 _Structure for `andor` value JSON_
 ```
 {
+    forEvery: 'true|false',
     firstStream: {
         eventReference: '',
         streamName: '',
@@ -276,7 +424,8 @@ _Structure for `andor` value JSON_
 _Structure for the `notfor` value JSON_
 ```
 {
-    streamName: '',
+    forEvery: 'true|false',
+    streamName: '', 
     filter: '',
     for: ''
 }
@@ -285,6 +434,7 @@ _Structure for the `notfor` value JSON_
 _Structure for the `notand` value JSON_
 ```
 {
+    forEvery: 'true|false',
     firstStream: {
         streamName: '',
         filter: ''
@@ -296,7 +446,6 @@ _Structure for the `notand` value JSON_
     }
 }
 ```
-
 
 ### Query Select
 ```
@@ -347,7 +496,7 @@ Query Output Can Have 4 different output types:
     type*: 'update',
     target*: '',
     for: 'current events|expired events|all events',
-    clause: '',
+    set: '',
     on*: ''
 }
 ```
@@ -358,7 +507,7 @@ Query Output Can Have 4 different output types:
     type*: 'update or insert',
     target*: '',
     for: 'current events|expired events|all events',
-    clause: '',
+    set: '',
     on*: ''
 }
 ```
