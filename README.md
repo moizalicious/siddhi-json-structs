@@ -1,9 +1,10 @@
 # JSON Structures To Define Siddhi Apps
 
 ## General Types
-These are the structures that are used in most of the siddhi elements, so they have been written here as general structs because the following structs have been used in two or more siddhi element definitions.
+These are general structures that are used in most of the siddhi element definitions, and are not stand alone elements (that is why they do not have an 'id'). 
 
 ### Key-Value Pair JSON
+This just is used to define a map of key-value pair and is named as `{Key-Value Pair JSON}`.
 ```
 {
     `key`: `value`,
@@ -377,7 +378,7 @@ Query input can be of the following types:
 }
 ```
 
-**JSON structure for `pattern & sequence` query input type:**
+**JSON structure for `pattern` query input type:**
 ```
 {
     type: 'pattern',
@@ -446,6 +447,83 @@ _Structure for the `notand` value JSON_
     }
 }
 ```
+
+**JSON structure for `sequence` query input type:**
+```
+{
+    type: 'sequence',
+    events: [
+        {
+            type: 'default | andor | notfor | notand',
+            value: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
+        },
+        ...
+    ]
+}
+```
+
+_Structure for `default` value JSON_
+```
+{
+    forEvery: 'true|false',
+    eventReference: '',
+    streamName: '',
+    filter: '',
+    countingSequence: {
+        type: 'minMax',
+        value: {
+            minCount: '',
+            maxCount: ''
+        }
+        << or >>
+        type: 'countingPattern',
+        value: '+|*|?'
+    }
+} 
+```
+
+_Structure for `andor` value JSON_
+```
+{
+    firstStream: {
+        eventReference: '',
+        streamName: '',
+        filter: ''
+    },
+    connectedWith: 'and|or',
+    secondStream: {
+        eventReference: '',
+        streamName: '',
+        filter: ''
+    }
+}
+```
+
+_Structure for the `notfor` value JSON_
+```
+{
+    streamName: '', 
+    filter: '',
+    for: ''
+}
+```
+
+_Structure for the `notand` value JSON_
+```
+{
+    forEvery: 'true|false',
+    firstStream: {
+        streamName: '',
+        filter: ''
+    },
+    secondStream: {
+        eventReference: '',
+        streamName: '',
+        filter: ''
+    }
+}
+```
+
 
 ### Query Select
 ```
