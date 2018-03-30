@@ -453,20 +453,39 @@ All queries have the following body structure
 
 ### Query Input (NOT FINALISED)
 The query input can be of the following types:
-* Window|Filter|Projection
+* Window-Filter-Projection
 * Join
 * Pattern & Sequence
 
-#### JSON Structure for `Window|Filter|Projection` query input type:
+#### JSON Structure for `Window-Filter-Projection` query input type:
 ```
 {
-    type: 'window|filter|projection',
-    from: '',
+    type*: 'window-filter-projection',
+    from*: '',
     filter: '',
     window: {
-        type: '',
-        parameters: ['value1',...],
+        function*: '',
+        parameters*: ['value1',...],
         filter: ''
+    }
+}
+```
+
+_**Example:**_
+```
+from InputStream[age >= 18]#window.time(1 hour)[age < 30]
+select ...
+```
+_The JSON for the above `Window-Filter-Projection` input is,_
+```
+{
+    type: 'window-filter-projection',
+    from: 'InputStream',
+    filter: 'age >= 18',
+    window: {
+        function: 'time',
+        parameters: ['1 hour'],
+        filter: 'age < 30'
     }
 }
 ```
@@ -478,7 +497,7 @@ The query input can be of the following types:
 * Join Aggregation
 * Join Window
 
-The way to identify if a join query is using `joinWith` attribute.
+The way to identify a join query is using the `joinWith` attribute.
 
 ##### JSON structure for the `Join Stream` type query
 ```
@@ -487,30 +506,65 @@ The way to identify if a join query is using `joinWith` attribute.
     joinWith*: 'stream'
     left*: {
         name*: '',
-        filter: '',
+        filter: '', // If there is a filter, then there must be a window
         window: {
-            type: '',
-            paramters: ['value1',...],
-            filter: ''
+            function*: '',
+            paramters*: ['value1',...],
         },
-        unidirectional: true|false
-        as*: ''
+        as: ''
     },
     joinType*: 'join|left outer|right outer|full outer',
     right*: {
         name*: '',
-        filter: '',
+        filter: '', // If there is a filter, then there must be a window
         window: {
-            type: '',
-            paramters: ['value1',...],
-            filter: ''
+            function*: '',
+            paramters*: ['value1',...],
         },
-        unidirectional: true|false
-        as*: ''
+        as: ''
     },
-    on: ''
+    uniderectional: 'left|right|none',
+    on*: ''
 }
 ```
+
+_**Example:**_
+```
+from TempStream[temp > 30.0]#window.time(1 min) as T
+    join RegulatorStream[isOn == false]#window.length(1) as R
+    on T.roomNo == R.roomNo
+select ...
+```
+_The JSON for the above `Join Stream` input is,_
+```
+{
+    type: 'join',
+    joinWith: 'stream',
+    left: {
+        name: 'TempStream',
+        filter: 'temp > 30.0',
+        window: {
+            function: 'time',
+            parameters: ['1 min']
+        },
+        as: 'T'
+    },
+    joinType: 'join',
+    right: {
+        name: 'RegulatorStream',
+        filter: 'isOn == false',
+        window: {
+            function: 'length',
+            parameters: ['1']
+        },
+        as: 'R'
+    },
+    uniderectional: 'none',
+    on: 'T.roomNo == R.roomNo'
+}
+```
+
+
 
 ##### JSON structure for the `Join Table` type query
 ```
@@ -519,7 +573,7 @@ The way to identify if a join query is using `joinWith` attribute.
     joinWith*: 'table',
     left*: {
         name*: '',
-        filter: '', // If there is a filter, there must be a window.
+        filter: '', // If there is a filter, then there must be a window.
         window: {
             function: '',
             parameters: ['value1',...]
@@ -536,9 +590,44 @@ The way to identify if a join query is using `joinWith` attribute.
         },
         as: ''
     },
-    on: ''
+    on*: ''
 }
 ```
+_**Example:**_
+```
+from TempStream[temp > 25.0]#window.time(10 min) as T 
+    join RoomTypeTable[roomNo > 100]#window.length(20) as R
+    on R.roomNo == T.roomNo
+select ...
+```
+_The JSON for the above `Join Stream` input is,_
+```
+{
+    type: 'join',
+    joinWith: 'table',
+    left: {
+        name: 'TempStream',
+        filter: 'temp > 25.0',
+        window: {
+            function: 'time',
+            parameters: ['10 min']
+        },
+        as: 'T'
+    },
+    joinType: 'join',
+    right: {
+        name: 'RoomTypeTable',
+        filter: 'roomNo > 100',
+        window: {
+            function: 'length',
+            parameters: ['20']
+        },
+        as: 'R'
+    },
+    on: 'R.roomNo == T.roomNo'
+}
+```
+
 
 ##### JSON structure for the `Join Aggregation` type query
 ```
