@@ -1,0 +1,14 @@
+@App:name("JoinTable")
+@App:description("Test Siddhi App For The Join Table Query")
+
+-- Please refer to https://docs.wso2.com/display/SP400/Quick+Start+Guide on getting started with SP editor. 
+
+
+define table RoomTypeTable (roomNo int, type string);
+define stream TempStream (deviceID long, roomNo int, temp double);
+
+from TempStream join RoomTypeTable
+    on RoomTypeTable.roomNo == TempStream.roomNo
+select deviceID, RoomTypeTable.type as roomType, type, temp
+    having roomType == 'server-room'
+insert into ServerRoomTempStream;

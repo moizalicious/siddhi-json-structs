@@ -1,0 +1,29 @@
+@App:name("PartitionTest")
+@App:description('Tests The Partitions')
+
+define stream TempStream (deviceID long, roomNo int, temp double);
+
+@info(name='TestPartition')
+partition with ( roomNo >= 1030 as 'serverRoom' or
+                 roomNo < 1030 and roomNo >= 330 as 'officeRoom' or
+                 roomNo < 330 as 'lobby' of TempStream)
+begin
+    from TempStream
+    select *
+    insert into OutputStream;
+
+    from TempStream#window.time(10 min)
+    select roomNo, deviceID, avg(temp) as avgTemp
+    insert into AreaTempStream;
+end;
+
+partition with ( deviceID of TempStream )
+begin
+    from TempStream#window.lengthBatch(10)
+    select roomNo, deviceID, avg(temp) as avgTemp
+    insert into #AvgTempStream;
+
+    from #AvgTempStream
+    select *
+    insert into NewAvgTempStream;
+end;

@@ -1,0 +1,12 @@
+@App:name("JoinWindow")
+@App:description("Test Siddhi App For The Join Window Query")
+
+-- Please refer to https://docs.wso2.com/display/SP400/Quick+Start+Guide on getting started with SP editor. 
+
+define window TwoMinTempWindow (roomNo int, temp double) time(2 min);
+define stream CheckStream (requestId string);
+
+from CheckStream as C join TwoMinTempWindow as T
+    on T.temp > 40
+select requestId, count(T.temp) as count
+insert into HighTempCountStream;

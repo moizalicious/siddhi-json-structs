@@ -1,0 +1,21 @@
+@App:name("JoinAggregation")
+@App:description("Test Siddhi App For The Join Window Query")
+
+-- Please refer to https://docs.wso2.com/display/SP400/Quick+Start+Guide on getting started with SP editor. 
+
+define stream TradeStream (symbol string, price double, volume long, timestamp long);
+
+define aggregation TradeAggregation
+  from TradeStream
+  select symbol, avg(price) as avgPrice, sum(price) as total
+    group by symbol
+    aggregate by timestamp every sec ... year;
+    
+define stream StockStream (symbol string, value int);
+
+from StockStream as S join TradeAggregation as T
+  on S.symbol == T.symbol 
+  within "2014-02-15 00:00:00 +05:30", "2014-03-16 00:00:00 +05:30" 
+  per "days" 
+select S.symbol, T.total, T.avgPrice 
+insert into AggregateStockStream;

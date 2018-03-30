@@ -1,0 +1,54 @@
+@App:name("Store-rdbms")
+@App:description('Receive events via simulator and persist the received data in the store.')
+
+define stream InsertSweetProductionStream (name string, amount double);
+define stream DeleteSweetProductionStream (name string, amount double);
+define stream SearchSweetProductionStream (name string);
+define stream ContainsSweetProductionStream (name string, amount double);
+
+@sink(type='log')
+define stream LogStream(name string, amount double);
+
+@Store(type="rdbms",
+       jdbc.url="jdbc:mysql://localhost:3306/production",
+       username="wso2",
+       password="123" ,
+       jdbc.driver.name="com.mysql.jdbc.Driver")
+--@PrimaryKey("name")
+@index("amount")
+define table SweetProductionTable (name string, amount double);
+
+@info(name='Partition1') 
+partition with (name of DeleteSweetProductionStream, name of InsertSweetProductionStream)
+    begin
+    /* Inserting event into the mysql database */
+    @info(name='Query1')
+    from InsertSweetProductionStream
+    insert into #InnerSweetProductionStream; 
+    
+    /* Deleting event from mysql database */
+    @info(name = 'Query2')
+    from DeleteSweetProductionStream
+    insert into #InnerSweetProductionStream;
+    
+    @info(name='Query3') 
+    from #InnerSweetProductionStream
+    insert into SweetProductionTable;  
+end;
+
+@info(name='Partition2') 
+partition with (name of ContainsSweetProductionStream, name of SearchSweetProductionStream)
+begin
+    /* Siddhi In in mysql database */
+    @info(name = 'Query4')
+    from ContainsSweetProductionStream
+    [(SweetProductionTable.name == name and SweetProductionTable.amount == amount) in SweetProductionTable]
+    insert into LogStream;
+    
+    --Perform a join on raw material name so that the data in the store can be viewed
+    @info(name='Query5')
+    from SearchSweetProductionStream as s join SweetProductionTable as sp
+        on s.name == sp.name
+    select sp.name, sp.amount
+    insert into LogStream;
+end;
