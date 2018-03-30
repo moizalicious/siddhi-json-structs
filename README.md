@@ -447,7 +447,8 @@ All queries have the following body structure
     groupBy: ['value1',...], 
     having: '',
     output: ''
-    queryOutput*: {Query Output JSON}
+    queryOutput*: {Query Output JSON},
+    annotationList: {Annotation JSON Array}
 }
 ```
 
@@ -897,7 +898,24 @@ Query Output Can Have 4 different output types:
 
 ## Partition Definition (NOT FINALISED)
 ```
-
+{
+    id*: ‘’,
+    members*: {
+        queryIds*: ['query1',...],
+        innerStreamIds: ['stream1',...] 
+    },
+    partitionWith*: {
+        type*: ‘{value|range}’,
+        expressions*: [
+            {
+                condition: ‘’,
+                partitionKey: ‘’
+            },
+            ...
+        ]
+    },
+    annotationList: {Annotation JSON Array}
+}
 ```
 
 # Full Siddhi App Definition (NOT FINALISED)
