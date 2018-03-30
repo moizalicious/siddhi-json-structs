@@ -41,10 +41,9 @@ _Example: To define the attributes `(name string, age int)` the JSON structure w
 ]
 ```
 
-
 ### Annotations
-Defines the annotations of any Siddhi element definition, as all annotations have somewhat the following structure.
-They are defined in a element definition in the name `annotationList` and have the following JSON structure.
+Defines the annotations of any Siddhi element, as all annotations have somewhat the same structure.
+They are defined in as a part of a Siddhi element using the name `annotationList`, and have the following JSON structure.
 ```
 [
     {
@@ -63,7 +62,8 @@ They are defined in a element definition in the name `annotationList` and have t
 
 ```
 
-_Example: To define the annotations `@Async(buffer.size='1024') @PrimaryKey('name','age')` the JSON structure would look like this,_
+_Example: To define the annotations `@Async(buffer.size='1024') @PrimaryKey('name','age')` the JSON 
+structure would look like this,_
 ```
 [
     {
@@ -81,10 +81,12 @@ _Example: To define the annotations `@Async(buffer.size='1024') @PrimaryKey('nam
 ]
 ```
 
-**Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different structure and are show seperately**
+**Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different 
+structure and are show separately**
 
 ### Store
-The store annotation is only used for tables and aggregations. So they are only defined in both table and aggregation structs as the name `store` in the following format:
+The store annotation is only used for tables and aggregations. So they are only defined in both table and 
+aggregation JSON structs as the name `store` in the following format:
 ```
 {
     type*: ‘’,
@@ -93,14 +95,13 @@ The store annotation is only used for tables and aggregations. So they are only 
 ```
 
 _**Example:**_
-```siddhi
-@Store(type="rdbms",
-                  jdbc.url="jdbc:mysql://localhost:3306/production",
-                  username="wso2",
-                  password="123" ,
-                  jdbc.driver.name="com.mysql.jdbc.Driver")
 ```
-
+@Store(type="rdbms",
+    jdbc.url="jdbc:mysql://localhost:3306/production",
+    username="wso2",
+    password="123" ,
+        jdbc.driver.name="com.mysql.jdbc.Driver")
+```
 _The JSON for the above store definition is,_
 ```
 {
@@ -128,7 +129,12 @@ _The JSON for the above store definition is,_
 }
 ```
 
-_Example: `@Async(buffer.size="1024") define stream InStream(name string, age int);`_
+_**Example:**_
+```
+@Async(buffer.size="1024")
+define stream InStream(name string, age int);
+```
+_The JSON for the above stream definition is,_
 ```
 {
     id: 'InStream',
@@ -167,7 +173,11 @@ _Example: `@Async(buffer.size="1024") define stream InStream(name string, age in
 }
 ```
 
-_Example: `define table InTable(name string, age int);`_
+_**Example:**_
+```
+define table InTable(name string, age int);
+```
+_The JSON for the above table definition is,_
 ```
 {
     id: 'InTable',
@@ -200,7 +210,11 @@ _Example: `define table InTable(name string, age int);`_
 }
 ```
 
-_Example: `define window SensorWindow (name string, value float) timeBatch(1 second) output expired events;`_
+_**Example:**_
+```
+define window SensorWindow (name string, value float) timeBatch(1 second) output expired events;
+```
+_The JSON for the above window definition is,_
 ```
 {
     id: 'SensorWindow',
@@ -232,7 +246,11 @@ _Example: `define window SensorWindow (name string, value float) timeBatch(1 sec
 }
 ```
 
-_Example: ` define trigger FiveMinTrigger at every 5 min;`_
+_**Example:**_
+```
+define trigger FiveMinTrigger at every 5 min;
+```
+_The JSON for the above trigger definition is,_
 ```
 {
     id: 'FiveMinTrigger',
@@ -266,11 +284,15 @@ _Example: ` define trigger FiveMinTrigger at every 5 min;`_
 }
 ```
 
-_Example: `define aggregation TradeAggregation
-             from TradeStream
-             select symbol, avg(price) as avgPrice, sum(price) as total
-               group by symbol
-               aggregate by timestamp every sec ... year;`_
+_**Example:**_
+```
+define aggregation TradeAggregation
+    from TradeStream
+        select symbol, avg(price) as avgPrice, sum(price) as total
+        group by symbol
+        aggregate by timestamp every sec ... year;
+```
+_The JSON for the above aggregation definition is,_
 ```
 {
     id: 'TradeAggregation',
@@ -326,10 +348,16 @@ _Example: `define aggregation TradeAggregation
 }
 ```
 
-_Example: `@Source(type = 'http',
-                   receiver.url='http://localhost:8006/productionStream',
-                   basic.auth.enabled='false',
-                   @map(type='json'))`_
+_**Example:**_
+```
+@Source(
+    type = 'http',
+    receiver.url='http://localhost:8006/productionStream',
+    basic.auth.enabled='false',
+    @map(type='json')
+)
+```
+_The JSON for the above source definition is,_
 ```
 {
     id: '<UUID>',
@@ -368,9 +396,20 @@ _Example: `@Source(type = 'http',
 }
 ```
 
-_Example: `@sink(type='http', publisher.url='http://localhost:8005/endpoint', method='POST', headers='Accept-Date:20/02/2017', 
-             basic.auth.username='admin', basic.auth.password='admin', basic.auth.enabled='true',
-             @map(type='json'))`_
+_**Example:**_
+```
+@sink(
+    type='http',
+    publisher.url='http://localhost:8005/endpoint', 
+    method='POST', 
+    headers='Accept-Date:20/02/2017', 
+    basic.auth.username='admin', 
+    basic.auth.password='admin', 
+    basic.auth.enabled='true',
+    @map(type='json')
+)
+```
+_The JSON for the above sink definition is,_
 ```
 {
     id: '<UUID>',
@@ -524,6 +563,30 @@ _JSON structure for the `Join Aggregation` type query_
     per*: ''
 }
 ```
+
+_JSON structure for the `Join Window` type query_
+```
+{
+    queryType: 'join',
+    joinWith: 'window',
+    left: {
+        name: '',
+        filter: '', // If there is a filter, there must be a window.
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: ''
+    },
+    right: {
+        name: '',
+        filter: '',
+        as: ''
+    },
+    on: ''
+}
+```
+
 
 
 **JSON structure for `pattern` query input type:**
