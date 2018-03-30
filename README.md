@@ -107,6 +107,8 @@ _Example: `@Store(type="rdbms",
                   
 
 ## Stream Definition
+**Note that if a stream is an inner stream, then it's attributes cannot be defined. Have to handle this in another way.**
+
 ```
 {
     id: '',
@@ -381,7 +383,7 @@ _Example: `@sink(type='http', publisher.url='http://localhost:8005/endpoint', me
 ```
 
 ## Query Definition (NOT FINALISED)
-A query has the following body structure
+All queries have the following body structure
 ```
 {
     id*: '',
@@ -389,6 +391,7 @@ A query has the following body structure
     select*: {Query Select JSON},
     groupBy: ['value1',...], 
     having: '',
+    output: ''
     queryOutput*: {Query Output JSON}
 }
 ```
@@ -415,11 +418,21 @@ Query input can be of the following types:
 ```
 
 **JSON Structure for `Join` query input type:_NOT FINALISED_**
+`join` queries can be broken down to 4 types:
+* Join Stream
+* Join Table
+* Join Aggregation
+* Join Window
+
+The way to identify if a join query is using `joinWith` attribute.
+
+_JSON structure for the `Join Stream` type query_
 ```
 {
-    type: 'join',
-    leftStream: {
-        name: '',
+    type*: 'join',
+    joinWith*: 'stream'
+    left*: {
+        name*: '',
         filter: '',
         window: {
             type: '',
@@ -427,23 +440,82 @@ Query input can be of the following types:
             filter: ''
         },
         unidirectional: true|false
+        as*: ''
+    },
+    joinType*: 'join|left outer|right outer|full outer',
+    right*: {
+        name*: '',
+        filter: '',
+        window: {
+            type: '',
+            paramters: ['value1',...],
+            filter: ''
+        },
+        unidirectional: true|false
+        as*: ''
+    },
+    on: ''
+}
+```
+
+_JSON structure for the `Join Table` type query_
+```
+{
+    type*: 'join',
+    joinWith*: 'table',
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, there must be a window.
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
         as: ''
     },
-    joinType: 'join|left outer|right outer|full outer',
-    rightStream: {
-        name: '',
-            filter: '',
-            window: {
-                type: '',
-                paramters: ['value1',...],
-                filter: ''
-            },
-        unidirectional: true|false
+    joinType*: 'join|left outer|right outer|full outer',
+    right*: {
+        name*: '',
+        filter: '',
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
         as: ''
     },
     on: ''
 }
 ```
+
+_JSON structure for the `Join Aggregation` type query_
+```
+{
+    type*: 'join',
+    joinWith*: 'aggregation',
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, there must be a window.
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: ''
+    },
+    joinType*: 'join|left outer|right outer|full outer',
+    right*: {
+        name*: '',
+        filter: '',
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: ''
+    },
+    on: '',
+    within*: '',
+    per*: ''
+}
+```
+
 
 **JSON structure for `pattern` query input type:**
 ```
