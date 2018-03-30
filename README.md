@@ -1,10 +1,12 @@
 # JSON Structures To Define Siddhi Apps
 
 ## General Types
-These are general structures that are used in most of the siddhi element definitions, and are not stand alone elements (that is why they do not have an 'id'). 
+These are general structures that are used in most of the siddhi element definitions, they are not stand 
+alone elements (that is why they do not have an 'id'). 
 
 ### Key-Value Pair JSON
-This just is used to define a map of key-value pair and is named as `{Key-Value Pair JSON}`.
+This just is used to define a map of key-value pair and is named as `{Key-Value Pair JSON}` when the structure 
+is referred.
 ```
 {
     `key`: `value`,
@@ -13,7 +15,8 @@ This just is used to define a map of key-value pair and is named as `{Key-Value 
 ```
 
 ### Attributes
-Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure which is named `attributeList` where ever they are used in a element definition.
+Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure 
+which is named `attributeList` where ever they are used in a element definition.
 ```
 [
     {
@@ -24,7 +27,7 @@ Defines attributes of a Stream, Table etc.. that have the same format. So they a
 ]
 ```
 
-_Example: If to define the attributes `(name string, age int)` the JSON structure would look something like this,_
+_Example: To define the attributes `(name string, age int)` the JSON structure would look like this,_
 ```
 [
     {
@@ -40,7 +43,8 @@ _Example: If to define the attributes `(name string, age int)` the JSON structur
 
 
 ### Annotations
-All annotations have somewhat the same structure, so annotations are shown in an element definition as `annotationList` and have the following structure:
+Defines the annotations of any Siddhi element definition, as all annotations have somewhat the following structure.
+They are defined in a element definition in the name `annotationList` and have the following JSON structure.
 ```
 [
     {
@@ -59,7 +63,7 @@ All annotations have somewhat the same structure, so annotations are shown in an
 
 ```
 
-_Example: `@Async(buffer.size='1024') @PrimaryKey('name','age')`_
+_Example: To define the annotations `@Async(buffer.size='1024') @PrimaryKey('name','age')` the JSON structure would look like this,_
 ```
 [
     {
@@ -88,11 +92,16 @@ The store annotation is only used for tables and aggregations. So they are only 
 }
 ```
 
-_Example: `@Store(type="rdbms",
+_**Example:**_
+```siddhi
+@Store(type="rdbms",
                   jdbc.url="jdbc:mysql://localhost:3306/production",
                   username="wso2",
                   password="123" ,
-                  jdbc.driver.name="com.mysql.jdbc.Driver")`_
+                  jdbc.driver.name="com.mysql.jdbc.Driver")
+```
+
+_The JSON for the above store definition is,_
 ```
 {
     type: 'rdbms',
