@@ -15,7 +15,7 @@ is referred.
 ```
 
 ### Attributes
-_**NOTE - The JSON attributes that end with a `*` symbol means that the attribute cannot be left null**_
+_**NOTE - The JSON attributes that end with a `*` symbol means that the attribute cannot be left null/empty**_
 
 Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure 
 which is named `attributeList` where ever they are used in a element definition.
@@ -452,13 +452,12 @@ All queries have the following body structure
 ```
 
 ### Query Input (NOT FINALISED)
-Query input can be of the following types:
+The query input can be of the following types:
 * Window|Filter|Projection
 * Join
 * Pattern & Sequence
 
-
-**JSON Structure for `Window|Filter|Projection` query input type:**
+#### JSON Structure for `Window|Filter|Projection` query input type:
 ```
 {
     type: 'window|filter|projection',
@@ -472,7 +471,7 @@ Query input can be of the following types:
 }
 ```
 
-**JSON Structure for `Join` query input type:_NOT FINALISED_**
+#### JSON Structure for `Join` query input type:_NOT FINALISED_
 `join` queries can be broken down to 4 types:
 * Join Stream
 * Join Table
@@ -481,7 +480,7 @@ Query input can be of the following types:
 
 The way to identify if a join query is using `joinWith` attribute.
 
-_JSON structure for the `Join Stream` type query_
+##### JSON structure for the `Join Stream` type query
 ```
 {
     type*: 'join',
@@ -513,7 +512,7 @@ _JSON structure for the `Join Stream` type query_
 }
 ```
 
-_JSON structure for the `Join Table` type query_
+##### JSON structure for the `Join Table` type query
 ```
 {
     type*: 'join',
@@ -541,7 +540,7 @@ _JSON structure for the `Join Table` type query_
 }
 ```
 
-_JSON structure for the `Join Aggregation` type query_
+##### JSON structure for the `Join Aggregation` type query
 ```
 {
     type*: 'join',
@@ -571,7 +570,7 @@ _JSON structure for the `Join Aggregation` type query_
 }
 ```
 
-_JSON structure for the `Join Window` type query_
+##### JSON structure for the `Join Window` type query
 ```
 {
     queryType: 'join',
@@ -596,7 +595,7 @@ _JSON structure for the `Join Window` type query_
 
 
 
-**JSON structure for `pattern` query input type:**
+#### JSON structure for `pattern` query input type:
 ```
 {
     type: 'pattern',
@@ -610,7 +609,7 @@ _JSON structure for the `Join Window` type query_
 }
 ```
 
-_Structure for `default` value JSON_
+##### Structure for `default` value JSON
 ```
 {
     forEvery: 'true|false',
@@ -622,7 +621,7 @@ _Structure for `default` value JSON_
 } 
 ```
 
-_Structure for `andor` value JSON_
+##### Structure for `andor` value JSON
 ```
 {
     forEvery: 'true|false',
@@ -640,7 +639,7 @@ _Structure for `andor` value JSON_
 }
 ```
 
-_Structure for the `notfor` value JSON_
+##### Structure for the `notfor` value JSON
 ```
 {
     forEvery: 'true|false',
@@ -650,7 +649,7 @@ _Structure for the `notfor` value JSON_
 }
 ```
 
-_Structure for the `notand` value JSON_
+##### Structure for the `notand` value JSON
 ```
 {
     forEvery: 'true|false',
@@ -666,7 +665,7 @@ _Structure for the `notand` value JSON_
 }
 ```
 
-**JSON structure for `sequence` query input type:**
+#### JSON structure for `sequence` query input type:
 ```
 {
     type: 'sequence',
@@ -680,7 +679,7 @@ _Structure for the `notand` value JSON_
 }
 ```
 
-_Structure for `default` value JSON_
+##### Structure for `default` value JSON
 ```
 {
     forEvery: 'true|false',
@@ -700,7 +699,7 @@ _Structure for `default` value JSON_
 } 
 ```
 
-_Structure for `andor` value JSON_
+##### Structure for `andor` value JSON
 ```
 {
     firstStream: {
@@ -717,7 +716,7 @@ _Structure for `andor` value JSON_
 }
 ```
 
-_Structure for the `notfor` value JSON_
+##### Structure for the `notfor` value JSON
 ```
 {
     streamName: '', 
@@ -726,7 +725,7 @@ _Structure for the `notfor` value JSON_
 }
 ```
 
-_Structure for the `notand` value JSON_
+##### Structure for the `notand` value JSON
 ```
 {
     firstStream: {
