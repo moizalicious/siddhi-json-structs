@@ -15,6 +15,8 @@ is referred.
 ```
 
 ### Attributes
+_**NOTE - The JSON attributes that end with a `*` symbol means that the attribute cannot be left null**_
+
 Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure 
 which is named `attributeList` where ever they are used in a element definition.
 ```
@@ -27,7 +29,7 @@ which is named `attributeList` where ever they are used in a element definition.
 ]
 ```
 
-_Example: To define the attributes `(name string, age int)` the JSON structure would look like this,_
+_**Example:** To define the attributes `(name string, age int)` the JSON structure would look like this,_
 ```
 [
     {
@@ -43,7 +45,8 @@ _Example: To define the attributes `(name string, age int)` the JSON structure w
 
 ### Annotations
 Defines the annotations of any Siddhi element, as all annotations have somewhat the same structure.
-They are defined in as a part of a Siddhi element using the name `annotationList`, and have the following JSON structure.
+They are defined in as a part of a Siddhi element using the name `annotationList`, 
+and have the following JSON structure.
 ```
 [
     {
@@ -62,7 +65,7 @@ They are defined in as a part of a Siddhi element using the name `annotationList
 
 ```
 
-_Example: To define the annotations `@Async(buffer.size='1024') @PrimaryKey('name','age')` the JSON 
+_**Example:** To define the annotations `@Async(buffer.size='1024') @PrimaryKey('name','age')` the JSON 
 structure would look like this,_
 ```
 [
@@ -100,7 +103,7 @@ _**Example:**_
     jdbc.url="jdbc:mysql://localhost:3306/production",
     username="wso2",
     password="123" ,
-        jdbc.driver.name="com.mysql.jdbc.Driver")
+    jdbc.driver.name="com.mysql.jdbc.Driver")
 ```
 _The JSON for the above store definition is,_
 ```
@@ -117,14 +120,12 @@ _The JSON for the above store definition is,_
                   
 
 ## Stream Definition
-**Note that if a stream is an inner stream, then it's attributes cannot be defined. Have to handle this in another way.**
-
 ```
 {
-    id: '',
-    name: '',
-    isInnerStream: true|false,
-    attributeList: {Attributes JSON Array},
+    id*: '',
+    name*: '',
+    isInnerStream*: true|false,
+    attributeList*: {Attributes JSON Array},
     annotationList: {Annotations JSON Array}
 }
 ```
@@ -161,13 +162,15 @@ _The JSON for the above stream definition is,_
     ]
 }
 ```
+**Note that if a stream is an inner stream, then it's attributes cannot be defined. 
+Have to handle this in another way.**
 
 ## Table Definition
 ```
 {
-    id: ‘’,
-    name: ‘’,
-    attributeList: {Attributes JSON Array},
+    id*: ‘’,
+    name*: ‘’,
+    attributeList*: {Attributes JSON Array},
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
 }
@@ -200,11 +203,11 @@ _The JSON for the above table definition is,_
 ## Window Definition
 ```
 {
-    id: ‘’,
-    name: ‘’,
-    attributeList: {Attributes JSON Array},
-    function: ‘time|length|timeBatch|lengthBatch...’,
-    parameters: ['value1',...],
+    id*: ‘’,
+    name*: ‘’,
+    attributeList*: {Attributes JSON Array},
+    function*: ‘time|length|timeBatch|lengthBatch...’,
+    parameters*: ['value1',...],
     outputEventType: ‘{current events|expired events|all events}’,
     annotationList: {Annotations JSON Array}
 }
@@ -239,9 +242,9 @@ _The JSON for the above window definition is,_
 ## Trigger Definition
 ```
 {
-    id: ‘’,
-    name: ‘’,
-    at: ‘{every|start|cron-expression}’
+    id*: ‘’,
+    name*: ‘’,
+    at*: ‘{every|start|cron-expression}’
     annotationList: {Annotations JSON Array}
 }
 ```
@@ -260,7 +263,7 @@ _The JSON for the above trigger definition is,_
 }
 ```
 
-## Aggregation Definition (NOT FINALISED)
+## Aggregation Definition
 ```
 {
     id*: ‘’,
@@ -268,16 +271,18 @@ _The JSON for the above trigger definition is,_
     from*: ‘’,
     select*: [
         {
-            name: ‘’,
-            aggregateFunction: ‘’,
-            attribute: ‘’
+            name*: ‘’,
+            aggregate: {
+                aggregateFunction*: ‘’,
+                attribute*: ‘’    
+            }
         },
         ...
     ],
     groupBy: ['value1',...],
-    aggregateBy: {
-        timeStamp: ‘’,
-        timePeriod: ‘’
+    aggregateBy*: {
+        timeStamp*: ‘’,
+        timePeriod*: ‘’
     },
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
@@ -301,18 +306,21 @@ _The JSON for the above aggregation definition is,_
     select: [
         {
             name: 'symbol',
-            aggregateFunction: '',
-            attribute: ''
+            aggregate: {}
         },
         {
             name: 'avgPrice',
-            aggregateFunction: 'avg',
-            attribute: 'price'
+            aggregate: {
+                aggregateFunction: ‘avg’,
+                attribute: ‘price’
+            }
         },
         {
             name: 'total',
-            aggregateFunction: 'sum',
-            attribute: 'price'
+            aggregate: {
+                aggregateFunction: ‘sum’,
+                attribute: ‘price’    
+            }
         }
     ],
     groupBy: ['symbol'],
@@ -324,25 +332,24 @@ _The JSON for the above aggregation definition is,_
     annotationList: []
 }
 ```
-               
 
-## Source Definition (NOT FINALISED)
+## Source Definition
 ```
 {
-    id: ‘’,
-    type: ‘’,
+    id*: ‘’,
+    type*: ‘’,
     options: {Key-Value Pair JSON},
     map: {
-        type: ‘’,
+        type*: ‘’,
         options: {Key-Value Pair JSON},
         attributes: {
-            type: ‘map’
-            value: {Key-Value Pair JSON}
+            type*: ‘map’
+            value*: {Key-Value Pair JSON}
         }
         << or >>
         attributes: {
-            type: ‘list’
-            value: ['value1',...]
+            type*: ‘list’
+            value*: ['value1',...]
         }
     }
 }
@@ -374,23 +381,23 @@ _The JSON for the above source definition is,_
 }
 ```                   
 
-## Sink Definition (NOT FINALISED)
+## Sink Definition
 ```
 {
-    id: ‘’,
-    type: ‘’,
+    id*: ‘’,
+    type*: ‘’,
     options: {Key-Value Pair JSON},
     map: {
-        type: ‘’,
+        type*: ‘’,
         options: {Key-Value Pair JSON},
         payload: {
-            type: ‘map’,
-            value: {Key-Value Pair JSON}
+            type*: ‘map’,
+            value*: {Key-Value Pair JSON}
         }
         << or  >>
         payload: {
-            type: 'single',
-            value: ''
+            type*: 'single',
+            value*: ''
         }
     }
 }
