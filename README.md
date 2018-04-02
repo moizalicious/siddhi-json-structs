@@ -1273,17 +1273,81 @@ _The JSON for `TestQuery1` is,_
 {
     id: 'TestQuery1',
     queryInput: {
-        
+        type: 'window-filter-projection',
+        from: 'TempStream',
+        filter: '',
+        window: {}
     },
-    select: {Query Select JSON},
-    groupBy: ['value1',...], 
+    select: {
+        type: 'all',
+        value: '*'
+    },
+    groupBy: [], 
     having: '',
     output: ''
-    queryOutput: {Query Output JSON},
-    annotationList: {Annotation JSON Array}
+    queryOutput: {
+        type: 'insert',
+        insert: '',
+        into: '#OutputStream'
+    },
+    annotationList: [
+        {
+            name: ‘info’
+            type: ‘map’,
+            values: {
+                'name': 'TestQuery1'  
+            }
+        }
+    ]
 }
 ```
 _The JSON for `TestQuery2` is,_
 ```
-
+{
+    id: 'TestQuery2',
+    queryInput: {
+        type: 'window-filter-projection',
+        from: 'TempStream',
+        filter: '',
+        window: {
+            function: 'time',
+            parameters: ['10 min'],
+            filter: ''
+        }
+    },
+    select: {
+        type: 'user-defined',
+        value: [
+            {
+                condition: 'roomNo',
+                as: ''
+            },
+            {
+                condition: 'deviceID',
+                as: ''
+            },
+            {
+                condition: 'avg(Temp)',
+                as: 'avgTemp'
+            }
+        ]
+    },
+    groupBy: [], 
+    having: '',
+    output: ''
+    queryOutput: {
+        type: 'insert',
+        insert: '',
+        into: 'AreaTempStream'
+    },
+    annotationList: [
+        {
+            name: ‘info’
+            type: ‘map’,
+            values: {
+                'name': 'TestPartition'  
+            }
+        }
+    ]
+}
 ```
