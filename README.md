@@ -437,7 +437,7 @@ _The JSON for the above sink definition is,_
 }
 ```
 
-## Query Definition (NOT FINALISED)
+## Query Definition
 All queries have the following body structure
 ```
 {
@@ -452,7 +452,7 @@ All queries have the following body structure
 }
 ```
 
-### Query Input (NOT FINALISED)
+### Query Input
 The query input can be of the following types:
 * Window-Filter-Projection
 * Join
@@ -491,7 +491,7 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 }
 ```
 
-#### JSON Structure for `Join` query input type:_NOT FINALISED_
+#### JSON Structure for `Join` query input type:
 `join` queries can be broken down to 4 types:
 * Join Stream
 * Join Table
@@ -601,7 +601,7 @@ from TempStream[temp > 25.0]#window.time(10 min) as T
     on R.roomNo == T.roomNo
 select ...
 ```
-_The JSON for the above `Join Stream` input is,_
+_The JSON for the above `Join Table` input is,_
 ```
 {
     type: 'join',
@@ -660,39 +660,98 @@ _The JSON for the above `Join Stream` input is,_
 }
 ```
 
-##### JSON structure for the `Join Window` type query
+_**Example:**_
+```
+from StockStream as S join TradeAggregation as T
+    on S.symbol == T.symbol 
+    within "2014-02-15 00:00:00 +05:30", "2014-03-16 00:00:00 +05:30" 
+    per "days" 
+select ...
+```
+_The JSON for the above `Join Aggregation` input is,_
 ```
 {
-    queryType: 'join',
-    joinWith: 'window',
+    type: 'join',
+    joinWith: 'aggregation',
     left: {
-        name: '',
-        filter: '', // If there is a filter, there must be a window.
-        window: {
-            function: '',
-            parameters: ['value1',...]
-        },
-        as: ''
-    },
-    right: {
-        name: '',
+        name: 'StockStream',
         filter: '',
-        as: ''
+        window: {},
+        as: 'S'
     },
-    on: ''
+    joinType: 'join',
+    right: {
+        name: 'TradeAggregation',
+        filter: '',
+        window: {},
+        as: 'T'
+    },
+    on: 'S.symbol == T.symbol',
+    within: '\"2014-02-15 00:00:00 +05:30\", \"2014-03-16 00:00:00 +05:30\"',
+    per: '\"days\"'
 }
 ```
 
 
-
-#### JSON structure for `pattern` query input type:
+##### JSON structure for the `Join Window` type query
 ```
 {
-    type: 'pattern',
-    events: [
+    type*: 'join',
+    joinWith*: 'window',
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, there must be a window.
+        window: {
+            function*: '',
+            parameters*: ['value1',...]
+        },
+        as: ''
+    },
+    right*: {
+        name*: '',
+        filter: '',
+        as: ''
+    },
+    on*: ''
+}
+```
+
+_**Example:**_
+```
+from CheckStream as C join TwoMinTempWindow as T
+    on T.temp > 40
+select ...
+```
+_The JSON for the above `Join Window` input is,_
+```
+{
+    type: 'join',
+    joinWith: 'window',
+    left: {
+        name: 'CheckStream',
+        filter: '',
+        window: {},
+        as: 'C'
+    },
+    right: {
+        name: 'TwoMinTempWindow',
+        filter: '',
+        as: 'T'
+    },
+    on: 'T.temp > 40'
+}
+```
+
+#### JSON structure for `pattern` query input type:
+All pattern queries have the following JSON structure. The JSON structure of the events depends on the type of each 
+event, and that structure is added in the `value` attribute.
+```
+{
+    type*: 'pattern',
+    events*: [
         {
-            type: 'default | andor | notfor | notand',
-            value: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
+            type*: 'default | andor | notfor | notand',
+            value*: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
         },
         ...
     ]
@@ -702,67 +761,143 @@ _The JSON for the above `Join Stream` input is,_
 ##### Structure for `default` value JSON
 ```
 {
-    forEvery: 'true|false',
+    forEvery*: 'true|false',
     eventReference: '',
-    streamName: '',
+    streamName*: '',
     filter: '',
     minCount: '',
     maxCount: ''
 } 
 ```
 
+_**Example:**_
+```
+-> every event1=InStream[age < 100]<21:234>
+```
+_The JSON for the above `default` event is,_
+```
+{
+    forEvery: 'true',
+    eventReference: 'event1',
+    streamName: 'InStream',
+    filter: 'age < 100',
+    minCount: '21',
+    maxCount: '234'
+}
+```
+
+
 ##### Structure for `andor` value JSON
 ```
 {
-    forEvery: 'true|false',
-    firstStream: {
+    forEvery*: 'true|false',
+    left*: {
         eventReference: '',
-        streamName: '',
+        streamName*: '',
         filter: ''
     },
-    connectedWith: 'and|or',
-    secondStream: {
+    connectedWith*: 'and|or',
+    right*: {
         eventReference: '',
-        streamName: '',
+        streamName*: '',
         filter: ''
     }
 }
 ```
 
+_**Example:**_
+```
+-> every event2=InStream[age > 30] and event3=InStream[age < 50]
+```
+_The JSON for the above `andor` event is,_
+```
+{
+    forEvery: 'true',
+    left: {
+        eventReference: 'event2',
+        streamName: 'InStream',
+        filter: 'age > 30'
+    },
+    connectedWith: 'and',
+    right: {
+        eventReference: 'event3',
+        streamName: 'InStream',
+        filter: 'age < 50 '
+    }
+}
+```
+
+
 ##### Structure for the `notfor` value JSON
 ```
 {
-    forEvery: 'true|false',
-    streamName: '', 
+    forEvery*: 'true|false',
+    streamName*: '', 
     filter: '',
-    for: ''
+    for*: ''
+}
+```
+
+_**Example:**_
+```
+-> every not InStream[age >= 18] for 5 sec
+```
+_The JSON for the above `notfor` event is,_
+```
+{
+    forEvery: 'true',
+    streamName: 'InStream', 
+    filter: 'age >= 18',
+    for: '5 sec'
 }
 ```
 
 ##### Structure for the `notand` value JSON
 ```
 {
-    forEvery: 'true|false',
-    firstStream: {
-        streamName: '',
+    forEvery*: 'true|false',
+    left*: {
+        streamName*: '',
         filter: ''
     },
-    secondStream: {
+    right*: {
         eventReference: '',
-        streamName: '',
+        streamName*: '',
         filter: ''
     }
 }
 ```
 
-#### JSON structure for `sequence` query input type:
+_**Example:**_
+```
+-> every not InStream[age < 18] and event6=InStream[age > 30]
+```
+_The JSON for the above `notand` event is,_
 ```
 {
-    type: 'sequence',
-    events: [
+    forEvery: 'true',
+    left: {
+        streamName: 'InStream',
+        filter: 'age < 18'
+    },
+    right: {
+        eventReference: 'event6',
+        streamName: 'InStream',
+        filter: 'age > 30'
+    }
+}
+```
+
+#### JSON structure for `sequence` query input type:
+Like pattern queries a sequence query has the same JSON body structure. The structures of the events are different 
+from the JSON structures of events in a pattern query.
+```
+{
+    type*: 'sequence',
+    events*: [
         {
-            type: 'default | andor | notfor | notand',
-            value: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
+            type*: 'default | andor | notfor | notand',
+            value*: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
         },
         ...
     ]
@@ -772,72 +907,144 @@ _The JSON for the above `Join Stream` input is,_
 ##### Structure for `default` value JSON
 ```
 {
-    forEvery: 'true|false',
+    forEvery*: 'true|false',
     eventReference: '',
-    streamName: '',
+    streamName*: '',
     filter: '',
     countingSequence: {
-        type: 'minMax',
-        value: {
+        type*: 'minMax',
+        value*: {
             minCount: '',
             maxCount: ''
         }
         << or >>
-        type: 'countingPattern',
-        value: '+|*|?'
+        type*: 'countingPattern',
+        value*: '+|*|?'
     }
 } 
 ```
 
+_**Example:**_
+```
+, every event1=InStream[age < 100]+
+```
+_The JSON for the above `default` event is,_
+```
+{
+    forEvery: 'true',
+    eventReference: 'event1',
+    streamName: 'InStream',
+    filter: 'age < 100',
+    countingSequence: {
+        type: 'countingPattern',
+        value: '+'
+    }
+}
+```
+
+
 ##### Structure for `andor` value JSON
 ```
 {
-    firstStream: {
+    firstStream*: {
         eventReference: '',
-        streamName: '',
+        streamName*: '',
         filter: ''
     },
-    connectedWith: 'and|or',
-    secondStream: {
+    connectedWith*: 'and|or',
+    secondStream*: {
         eventReference: '',
-        streamName: '',
+        streamName*: '',
         filter: ''
     }
 }
 ```
 
+_**Example:**_
+```
+, event2=InStream[age > 18] and event3=InStream[age < 30]
+```
+_The JSON for the above `andor` event is,_
+```
+{
+    firstStream: {
+        eventReference: 'event2',
+        streamName: 'InStream',
+        filter: 'age > 18'
+    },
+    connectedWith: 'and',
+    secondStream: {
+        eventReference: 'event3',
+        streamName: 'InStream',
+        filter: 'age < 30'
+    }
+}
+```
+
+
 ##### Structure for the `notfor` value JSON
 ```
 {
-    streamName: '', 
+    streamName*: '', 
     filter: '',
-    for: ''
+    for*: ''
+}
+```
+
+_**Example:**_
+```
+, not InStream[age >= 18] for 5 sec
+```
+_The JSON for the above `notfor` event is,_
+```
+{
+    streamName: 'InStream', 
+    filter: 'age >= 18',
+    for: '5 sec'
 }
 ```
 
 ##### Structure for the `notand` value JSON
 ```
 {
-    firstStream: {
-        streamName: '',
+    firstStream*: {
+        streamName*: '',
         filter: ''
     },
-    secondStream: {
+    secondStream*: {
         eventReference: '',
-        streamName: '',
+        streamName*: '',
         filter: ''
     }
 }
 ```
 
+_**Example:**_
+```
+, not InStream[age < 18] and event6=InStream[age > 30]
+```
+_The JSON for the above `notand` event is,_
+```
+{
+    firstStream: {
+        streamName: 'InStream',
+        filter: 'age < 18'
+    },
+    secondStream: {
+        eventReference: 'event6',
+        streamName: 'InStream',
+        filter: 'age > 30'
+    }
+}
+```
 
-### Query Select (NOT FINALISED)
+### Query Select
 ```
 {
     type*: 'user-defined',
     value*: [
         {
-            condition: '',
+            condition*: '',
             as: ''
         },
         ...
@@ -848,7 +1055,37 @@ _The JSON for the above `Join Stream` input is,_
 }
 ```
 
-### Query Output (NOT FINALISED)
+_**Example:**_
+```
+select Stream1.id as UID, avg(price) as avgPrice, ((TempStream.temp - 32) * 5)/9 as Celsius, isInStock ...
+```
+_The JSON for the above `select` function is,_
+```
+{
+    type: 'user-defined',
+    value: [
+        {
+            condition: 'Stream1.id',
+            as: 'UID'
+        },
+        {
+            condition: 'avg(price)',
+            as: 'avgPrice'
+        },
+        {
+            condition: '((TempStream.temp - 32) * 5)/9',
+            as: 'Celsius'
+        },              
+        {
+            condition: 'isInStock',
+            as: ''
+        }
+    ]
+}
+```
+
+
+### Query Output
 Query Output Can Have 4 different output types:
 * Insert
 * Delete
@@ -859,8 +1096,21 @@ Query Output Can Have 4 different output types:
 ```
 {
     type*: 'insert',
-    insert*: 'current events|expired events|all events',
+    insert: 'current events|expired events|all events',
     into*: ''
+}
+```
+
+_**Example:**_
+```
+insert all events into LogStream;
+```
+_The JSON for the above `insert` function is,_
+```
+{
+    type: 'insert',
+    insert: 'all events',
+    into: 'LogStream'
 }
 ```
 
@@ -874,6 +1124,23 @@ Query Output Can Have 4 different output types:
 }
 ```
 
+_**Example:**_
+```
+delete RoomTypeTable
+    for all events 
+    on RoomTypeTable.roomNo == roomNumber;
+```
+_The JSON for the above `insert` function is,_
+```
+{
+    type: 'delete',
+    target: 'RoomTypeTable',
+    for: 'all events',
+    on: 'RoomTypeTable.roomNo == roomNumber'
+}
+```
+
+
 **JSON structure for the `update` query output type:**
 ```
 {
@@ -885,6 +1152,24 @@ Query Output Can Have 4 different output types:
 }
 ```
 
+_**Example:**_
+```
+update RoomTypeTable
+    set RoomTypeTable.people = RoomTypeTable.people + arrival - exit
+    on RoomTypeTable.roomNo == roomNumber;
+```
+_The JSON for the above `update` function is,_
+```
+{
+    type: 'update',
+    target: 'RoomTypeTable',
+    for: '',
+    set: 'RoomTypeTable.people = RoomTypeTable.people + arrival - exit',
+    on: 'RoomTypeTable.roomNo == roomNumber'
+}
+```
+
+
 **JSON structure for the `update or insert` query output type:**
 ```
 {
@@ -893,6 +1178,23 @@ Query Output Can Have 4 different output types:
     for: 'current events|expired events|all events',
     set: '',
     on*: ''
+}
+```
+
+_**Example:**_
+```
+update or insert into RoomAssigneeTable
+    set RoomAssigneeTable.assignee = assignee
+    on RoomAssigneeTable.roomNo == roomNo;
+```
+_The JSON for the above `update or insert` function is,_
+```
+{
+    type: 'update or insert',
+    target: 'RoomAssigneeTable',
+    for: '',
+    set: 'RoomAssigneeTable.assignee = assignee',
+    on: 'RoomAssigneeTable.roomNo == roomNo'
 }
 ```
 
@@ -909,7 +1211,7 @@ Query Output Can Have 4 different output types:
         expressions*: [
             {
                 condition: ‘’,
-                partitionKey: ‘’
+                streamId: ‘’
             },
             ...
         ]
@@ -918,7 +1220,70 @@ Query Output Can Have 4 different output types:
 }
 ```
 
-# Full Siddhi App Definition (NOT FINALISED)
+_**Example:**_
+```
+@info(name='TestPartition')
+partition with ( roomNo >= 1030 as 'serverRoom' or
+                 roomNo < 1030 and roomNo >= 330 as 'officeRoom' or
+                 roomNo < 330 as 'lobby' of TempStream)
+begin
+    @info(name='TestQuery1') 
+    from TempStream
+    select *
+    insert into #OutputStream;
+
+    @info(name='TestQuery2') 
+    from TempStream#window.time(10 min)
+    select roomNo, deviceID, avg(temp) as avgTemp
+    insert into AreaTempStream;
+end;
+```
+_The JSON for the above `partition` is,_
+```
+{
+    id: ‘TestPartition’,
+    members: {
+        queryIds: ['TestQuery1','TestQuery2'],
+        innerStreamIds: ['OutputStream'] 
+    },
+    partitionWith: {
+        type: ‘range’,
+        expressions: [
+            {
+                condition: ‘roomNo >= 1030 as \'serverRoom\'
+                    or roomNo < 1030 and roomNo >= 330 as \'officeRoom\'
+                    or roomNo < 330 as \'lobby\'’,
+                streamId: ‘TempStream’
+            }
+        ]
+    },
+    annotationList: [
+        {
+            name: ‘info’
+            type: ‘map’,
+            values: {
+                'name': 'TestPartition'  
+            }
+        }
+    ]
+}
+```
+_The JSON for `TestQuery1` is,_
+```
+{
+    id: 'TestQuery1',
+    queryInput: {
+        
+    },
+    select: {Query Select JSON},
+    groupBy: ['value1',...], 
+    having: '',
+    output: ''
+    queryOutput: {Query Output JSON},
+    annotationList: {Annotation JSON Array}
+}
+```
+_The JSON for `TestQuery2` is,_
 ```
 
 ```
