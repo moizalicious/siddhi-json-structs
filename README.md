@@ -1,5 +1,28 @@
 # JSON Structures To Define Siddhi Apps
 
+## Contents
+1. [General Types](#general-types)
+    1. [Key-Value Pair JSON](#key-value-pair-json)
+    2. [Attributes](#attributes)
+    3. [Annotations](#annotations)
+    4. [Store](#store)    
+2. [Stream Definition](#stream-definition)
+3. [Table Definition](#table-definition)
+4. [Window Definition](#window-definition)
+5. [Trigger Definition](#trigger-definition)
+6. [Aggregation Definition](#aggregation-definition)
+7. [Source Definition](#source-definition)
+8. [Sink Definition](#sink-definition)
+9. [Query Definition](#query-definition)
+    1. [Query Input](#query-input)
+        1. [Window-Filter-Projection Query](#window-filter-projection)
+        2. [Join Query](#join)
+        3. [Pattern Query](#pattern)
+        4. [Sequence Query](#sequence)
+    2. [Query Select](#query-select)
+    3. [Query Output](#query-output)
+10. [Partition Definition](#partition-definition)
+
 ## General Types
 These are general structures that are used in most of the siddhi element definitions, they are not stand 
 alone elements (that is why they do not have an 'id'). 
@@ -458,7 +481,7 @@ The query input can be of the following types:
 * Join
 * Pattern & Sequence
 
-#### JSON Structure for `Window-Filter-Projection` query input type:
+#### <a name="window-filter-projection">JSON Structure for `Window-Filter-Projection` query input type:</a>
 ```
 {
     type*: 'window-filter-projection',
@@ -491,7 +514,7 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 }
 ```
 
-#### JSON Structure for `Join` query input type:
+#### <a name="join">JSON Structure for `Join` query input type:</a>
 `join` queries can be broken down to 4 types:
 * Join Stream
 * Join Table
@@ -742,7 +765,7 @@ _The JSON for the above `Join Window` input is,_
 }
 ```
 
-#### JSON structure for `pattern` query input type:
+#### <a name="pattern">JSON structure for `pattern` query input type:</a>
 All pattern queries have the following JSON structure. The JSON structure of the events depends on the type of each 
 event, and that structure is added in the `value` attribute.
 ```
@@ -888,7 +911,7 @@ _The JSON for the above `notand` event is,_
 }
 ```
 
-#### JSON structure for `sequence` query input type:
+#### <a name="sequence">JSON structure for `sequence` query input type:</a>
 Like pattern queries a sequence query has the same JSON body structure. The structures of the events are different 
 from the JSON structures of events in a pattern query.
 ```
@@ -1198,7 +1221,7 @@ _The JSON for the above `update or insert` function is,_
 }
 ```
 
-## Partition Definition (NOT FINALISED)
+## Partition Definition
 ```
 {
     id*: ‘’,
