@@ -315,12 +315,10 @@ _The JSON for the above trigger definition is,_
         ...
     ],
     groupBy: ['value1',...],
-    aggregateBy*: {
-        attribute*: ‘’,
-        timePeriod*: {
-            minValue*: '', // Atleast one value should be added, and that will be marked as the minValue
-            maxValue: '' // Max value is added if the user wants to define a range of timestamps
-        }
+    aggregateByAttribute*: '',
+    aggregateByTimePeriod*: {
+        minValue*: '', // Atleast one value should be added, and that will be marked as the minValue
+        maxValue: '' // Max value is added if the user wants to define a range of timestamps
     },
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
@@ -362,12 +360,10 @@ _The JSON for the above aggregation definition is,_
         }
     ],
     groupBy: ['symbol'],
-    aggregateBy: {
-        attribute: 'timestamp',
-        timePeriod: {
-            minValue: 'sec',
-            maxValue: 'year'
-        }
+    aggregateByAttribute: 'timestamp',
+    aggregateByTimePeriod: {
+        minValue: 'sec', 
+        maxValue: 'year'
     },
     store: {},
     annotationList: []
