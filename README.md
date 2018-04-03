@@ -75,13 +75,15 @@ and have the following JSON structure.
     {
         name*: ‘’,
         type*: ‘list’,
-        values*: ['value1',...]
+        values*: ['value1',...],
+        isString*: 'true|false'
     },
     << and|or >>
     {
         name*: ‘’
         type*: ‘map’,
-        values*: {Key-Value Pair JSON}
+        values*: {Key-Value Pair JSON},
+        isString*: 'true|false'
     },
     ...
 ]
@@ -305,7 +307,10 @@ _The JSON for the above trigger definition is,_
     groupBy: ['value1',...],
     aggregateBy*: {
         attribute*: ‘’,
-        timePeriod*: ‘’
+        timePeriod*: {
+            minValue*: '', // Atleast one value should be added, and that will be marked as the minValue
+            maxValue: '' // Max value is added if the user wants to define a range of timestamps
+        }
     },
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
@@ -349,7 +354,10 @@ _The JSON for the above aggregation definition is,_
     groupBy: ['symbol'],
     aggregateBy: {
         attribute: 'timestamp',
-        timePeriod: 'sec...year'
+        timePeriod: {
+            minValue: 'sec',
+            maxValue: 'year'
+        }
     },
     store: {},
     annotationList: []
@@ -469,7 +477,7 @@ All queries have the following body structure
     select*: {Query Select JSON},
     groupBy: ['value1',...], 
     having: '',
-    output: ''
+    outputRateLimit: ''
     queryOutput*: {Query Output JSON},
     annotationList: {Annotation JSON Array}
 }
@@ -535,6 +543,7 @@ The way to identify a join query is using the `joinWith` attribute.
             function*: '',
             paramters*: ['value1',...],
         },
+        isUnidirectional: 'true|false', // Only one 'isUnidirectional' value can be true at a time
         as: ''
     },
     joinType*: 'join|left outer|right outer|full outer',
@@ -545,9 +554,9 @@ The way to identify a join query is using the `joinWith` attribute.
             function*: '',
             paramters*: ['value1',...],
         },
+        isUnidirectional: 'true|false', // Only one 'isUnidirectional' value can be true at a time
         as: ''
     },
-    uniderectional: 'left|right|none',
     on*: ''
 }
 ```
@@ -571,6 +580,7 @@ _The JSON for the above `Join Stream` input is,_
             function: 'time',
             parameters: ['1 min']
         },
+        isUnidirectional: 'false',
         as: 'T'
     },
     joinType: 'join',
@@ -581,9 +591,9 @@ _The JSON for the above `Join Stream` input is,_
             function: 'length',
             parameters: ['1']
         },
+        isUnidirectional: 'false',
         as: 'R'
     },
-    uniderectional: 'none',
     on: 'T.roomNo == R.roomNo'
 }
 ```
@@ -1067,7 +1077,7 @@ _The JSON for the above `notand` event is,_
     type*: 'user-defined',
     value*: [
         {
-            condition*: '',
+            expression*: '',
             as: ''
         },
         ...
@@ -1088,19 +1098,19 @@ _The JSON for the above `select` function is,_
     type: 'user-defined',
     value: [
         {
-            condition: 'Stream1.id',
+            expression: 'Stream1.id',
             as: 'UID'
         },
         {
-            condition: 'avg(price)',
+            expression: 'avg(price)',
             as: 'avgPrice'
         },
         {
-            condition: '((TempStream.temp - 32) * 5)/9',
+            expression: '((TempStream.temp - 32) * 5)/9',
             as: 'Celsius'
         },              
         {
-            condition: 'isInStock',
+            expression: 'isInStock',
             as: ''
         }
     ]
@@ -1163,14 +1173,16 @@ _The JSON for the above `insert` function is,_
 }
 ```
 
-
 **JSON structure for the `update` query output type:**
 ```
 {
     type*: 'update',
     target*: '',
     for: 'current events|expired events|all events',
-    set: '',
+    set*: {
+        attribute*: '',
+        value*: ''
+    },
     on*: ''
 }
 ```
@@ -1187,7 +1199,10 @@ _The JSON for the above `update` function is,_
     type: 'update',
     target: 'RoomTypeTable',
     for: '',
-    set: 'RoomTypeTable.people = RoomTypeTable.people + arrival - exit',
+    set: {
+        attribute: 'RoomTypeTable.people',
+        value: 'RoomTypeTable.people + arrival - exit'
+    },
     on: 'RoomTypeTable.roomNo == roomNumber'
 }
 ```
@@ -1199,7 +1214,10 @@ _The JSON for the above `update` function is,_
     type*: 'update or insert',
     target*: '',
     for: 'current events|expired events|all events',
-    set: '',
+    set*: {
+        attribute*: '',
+        value*: ''
+    },
     on*: ''
 }
 ```
@@ -1216,7 +1234,10 @@ _The JSON for the above `update or insert` function is,_
     type: 'update or insert',
     target: 'RoomAssigneeTable',
     for: '',
-    set: 'RoomAssigneeTable.assignee = assignee',
+    set: {
+        attribute: 'RoomAssigneeTable.assignee',
+        value: 'assignee'
+    },
     on: 'RoomAssigneeTable.roomNo == roomNo'
 }
 ```
@@ -1342,15 +1363,15 @@ _The JSON for `TestQuery2` is,_
         type: 'user-defined',
         value: [
             {
-                condition: 'roomNo',
+                expression: 'roomNo',
                 as: ''
             },
             {
-                condition: 'deviceID',
+                expression: 'deviceID',
                 as: ''
             },
             {
-                condition: 'avg(Temp)',
+                expression: 'avg(Temp)',
                 as: 'avgTemp'
             }
         ]
