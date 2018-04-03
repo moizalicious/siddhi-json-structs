@@ -304,7 +304,7 @@ _The JSON for the above trigger definition is,_
     ],
     groupBy: ['value1',...],
     aggregateBy*: {
-        timeStamp*: ‘’,
+        attribute*: ‘’,
         timePeriod*: ‘’
     },
     store: {Store JSON},
@@ -348,7 +348,7 @@ _The JSON for the above aggregation definition is,_
     ],
     groupBy: ['symbol'],
     aggregateBy: {
-        timeStamp: 'timestamp',
+        attribute: 'timestamp',
         timePeriod: 'sec...year'
     },
     store: {},
