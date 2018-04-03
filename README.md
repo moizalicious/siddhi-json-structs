@@ -75,15 +75,25 @@ and have the following JSON structure.
     {
         name*: ‘’,
         type*: ‘list’,
-        values*: ['value1',...],
-        isString*: 'true|false'
+        values*: [
+            {
+                value: '',
+                isString: 'true|false'
+            },
+            ...
+        ]
     },
     << and|or >>
     {
         name*: ‘’
         type*: ‘map’,
-        values*: {Key-Value Pair JSON},
-        isString*: 'true|false'
+        values*: {
+            'option1': {
+                value: '',
+                isString: 'true|false'
+            },
+            ...
+        }
     },
     ...
 ]
