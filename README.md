@@ -1205,10 +1205,10 @@ _The JSON for the above `update` function is,_
 ```
 
 
-**JSON structure for the `update or insert` query output type:**
+**JSON structure for the `update or insert into` query output type:**
 ```
 {
-    type*: 'update or insert into',
+    type*: 'update-or-insert-into',
     target*: '',
     for: 'current events|expired events|all events',
     set*: {
