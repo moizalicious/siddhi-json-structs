@@ -306,11 +306,8 @@ _The JSON for the above trigger definition is,_
     from*: ‘’,
     select*: [
         {
-            name*: ‘’,
-            aggregate: {
-                aggregateFunction*: ‘’,
-                attribute*: ‘’    
-            }
+            expression*: '',
+            as: ''
         },
         ...
     ],
@@ -341,22 +338,16 @@ _The JSON for the above aggregation definition is,_
     from: 'TradeStream',
     select: [
         {
-            name: 'symbol',
-            aggregate: {}
+            expression: 'symbol',
+            as: ''
         },
         {
-            name: 'avgPrice',
-            aggregate: {
-                aggregateFunction: ‘avg’,
-                attribute: ‘price’
-            }
+            expression: 'avg(price)',
+            as: 'avgPrice'
         },
         {
-            name: 'total',
-            aggregate: {
-                aggregateFunction: ‘sum’,
-                attribute: ‘price’    
-            }
+            expression: 'sum(price)',
+            as: 'total'
         }
     ],
     groupBy: ['symbol'],
