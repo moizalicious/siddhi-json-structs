@@ -304,13 +304,19 @@ _The JSON for the above trigger definition is,_
     id*: ‘’,
     name*: ‘’,
     from*: ‘’,
-    select*: [
-        {
-            expression*: '',
-            as: ''
-        },
-        ...
-    ],
+    select*: {
+        type*: 'user-defined',
+        value*: [
+            {
+                expression*: '',
+                as: ''
+            },
+            ...
+        ]
+        << or >>
+        type*: 'all',
+        value*: '*'
+    },
     groupBy: ['value1',...],
     aggregateByAttribute*: '',
     aggregateByTimePeriod*: {
@@ -336,20 +342,23 @@ _The JSON for the above aggregation definition is,_
     id: 'TradeAggregation',
     name: 'TradeAggregation',
     from: 'TradeStream',
-    select: [
-        {
-            expression: 'symbol',
-            as: ''
-        },
-        {
-            expression: 'avg(price)',
-            as: 'avgPrice'
-        },
-        {
-            expression: 'sum(price)',
-            as: 'total'
-        }
-    ],
+    select: {
+        type: 'user-defined',
+        value: [
+            {
+                expression: 'symbol',
+                as: ''
+            },
+            {
+                expression: 'avg(price)',
+                as: 'avgPrice'
+            },
+            {
+                expression: 'sum(price)',
+                as: 'total'
+            }
+        ]
+    },
     groupBy: ['symbol'],
     aggregateByAttribute: 'timestamp',
     aggregateByTimePeriod: {
