@@ -873,7 +873,7 @@ _The JSON for the above `andor` event is,_
     forEvery*: 'true|false',
     streamName*: '', 
     filter: '',
-    for*: ''
+    forDuration*: ''
 }
 ```
 
@@ -887,7 +887,7 @@ _The JSON for the above `notfor` event is,_
     forEvery: 'true',
     streamName: 'InStream', 
     filter: 'age >= 18',
-    for: '5 sec'
+    forDuration: '5 sec'
 }
 ```
 
@@ -1026,7 +1026,7 @@ _The JSON for the above `andor` event is,_
 {
     streamName*: '', 
     filter: '',
-    for*: ''
+    forDuration*: ''
 }
 ```
 
@@ -1039,7 +1039,7 @@ _The JSON for the above `notfor` event is,_
 {
     streamName: 'InStream', 
     filter: 'age >= 18',
-    for: '5 sec'
+    forDuration: '5 sec'
 }
 ```
 
@@ -1158,7 +1158,7 @@ _The JSON for the above `insert` function is,_
 {
     type*: 'delete',
     target*: '',
-    for: 'current events|expired events|all events',
+    forEventType: 'current events|expired events|all events',
     on*: ''
 }
 ```
@@ -1174,7 +1174,7 @@ _The JSON for the above `insert` function is,_
 {
     type: 'delete',
     target: 'RoomTypeTable',
-    for: 'all events',
+    forEventType: 'all events',
     on: 'RoomTypeTable.roomNo == roomNumber'
 }
 ```
@@ -1184,7 +1184,7 @@ _The JSON for the above `insert` function is,_
 {
     type*: 'update',
     target*: '',
-    for: 'current events|expired events|all events',
+    forEventType: 'current events|expired events|all events',
     set*: {
         attribute*: '',
         value*: ''
@@ -1204,7 +1204,7 @@ _The JSON for the above `update` function is,_
 {
     type: 'update',
     target: 'RoomTypeTable',
-    for: '',
+    forEventType: '',
     set: {
         attribute: 'RoomTypeTable.people',
         value: 'RoomTypeTable.people + arrival - exit'
@@ -1219,7 +1219,7 @@ _The JSON for the above `update` function is,_
 {
     type*: 'update-or-insert-into',
     target*: '',
-    for: 'current events|expired events|all events',
+    forEventType: 'current events|expired events|all events',
     set*: {
         attribute*: '',
         value*: ''
@@ -1239,7 +1239,7 @@ _The JSON for the above `update or insert into` function is,_
 {
     type: 'update-or-insert-into',
     target: 'RoomAssigneeTable',
-    for: '',
+    forEventType: '',
     set: {
         attribute: 'RoomAssigneeTable.assignee',
         value: 'assignee'
