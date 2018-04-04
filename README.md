@@ -1120,7 +1120,7 @@ Query Output Can Have 4 different output types:
 * Insert
 * Delete
 * Update
-* Update or insert
+* Update or insert into
 
 **JSON structure for `insert` query output type:**
 ```
@@ -1208,7 +1208,7 @@ _The JSON for the above `update` function is,_
 **JSON structure for the `update or insert` query output type:**
 ```
 {
-    type*: 'update or insert',
+    type*: 'update or insert into',
     target*: '',
     for: 'current events|expired events|all events',
     set*: {
@@ -1225,10 +1225,10 @@ update or insert into RoomAssigneeTable
     set RoomAssigneeTable.assignee = assignee
     on RoomAssigneeTable.roomNo == roomNo;
 ```
-_The JSON for the above `update or insert` function is,_
+_The JSON for the above `update or insert into` function is,_
 ```
 {
-    type: 'update or insert',
+    type: 'update or insert into',
     target: 'RoomAssigneeTable',
     for: '',
     set: {
