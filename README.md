@@ -1228,7 +1228,7 @@ update or insert into RoomAssigneeTable
 _The JSON for the above `update or insert into` function is,_
 ```
 {
-    type: 'update or insert into',
+    type: 'update-or-insert-into',
     target: 'RoomAssigneeTable',
     for: '',
     set: {
