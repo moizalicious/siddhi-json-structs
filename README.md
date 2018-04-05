@@ -952,10 +952,8 @@ from the JSON structures of events in a pattern query.
     filter: '',
     countingSequence: {
         type*: 'minMax',
-        value*: {
-            minCount: '',
-            maxCount: ''
-        }
+        minCount: '',
+        maxCount: ''
         << or >>
         type*: 'countingPattern',
         value*: '+|*|?'
@@ -1185,10 +1183,13 @@ _The JSON for the above `insert` function is,_
     type*: 'update',
     target*: '',
     forEventType: 'current events|expired events|all events',
-    set*: {
-        attribute*: '',
-        value*: ''
-    },
+    set*: [
+        {
+            attribute*: '',
+            value*: ''
+        },
+        ...
+    ],
     on*: ''
 }
 ```
@@ -1205,10 +1206,12 @@ _The JSON for the above `update` function is,_
     type: 'update',
     target: 'RoomTypeTable',
     forEventType: '',
-    set: {
-        attribute: 'RoomTypeTable.people',
-        value: 'RoomTypeTable.people + arrival - exit'
-    },
+    set: [
+        {
+            attribute: 'RoomTypeTable.people',
+            value: 'RoomTypeTable.people + arrival - exit'
+        }
+    ],
     on: 'RoomTypeTable.roomNo == roomNumber'
 }
 ```
@@ -1220,10 +1223,13 @@ _The JSON for the above `update` function is,_
     type*: 'update-or-insert-into',
     target*: '',
     forEventType: 'current events|expired events|all events',
-    set*: {
-        attribute*: '',
-        value*: ''
-    },
+    set*: [
+        {
+            attribute*: '',
+            value*: ''
+        },
+        ...
+    ],
     on*: ''
 }
 ```
@@ -1240,10 +1246,12 @@ _The JSON for the above `update or insert into` function is,_
     type: 'update-or-insert-into',
     target: 'RoomAssigneeTable',
     forEventType: '',
-    set: {
-        attribute: 'RoomAssigneeTable.assignee',
-        value: 'assignee'
-    },
+    set: [
+        {
+            attribute: 'RoomAssigneeTable.assignee',
+            value: 'assignee'
+        }
+    ],
     on: 'RoomAssigneeTable.roomNo == roomNo'
 }
 ```
