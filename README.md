@@ -830,17 +830,13 @@ _The JSON for the above `default` event is,_
 ```
 {
     forEvery*: 'true|false',
-    left*: {
-        eventReference: '',
-        streamName*: '',
-        filter: ''
-    },
+    leftStreamEventReference: '',
+    leftStreamName*: '',
+    leftStreamFilter: '',
     connectedWith*: 'and|or',
-    right*: {
-        eventReference: '',
-        streamName*: '',
-        filter: ''
-    }
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: ''
 }
 ```
 
@@ -852,17 +848,13 @@ _The JSON for the above `andor` event is,_
 ```
 {
     forEvery: 'true',
-    left: {
-        eventReference: 'event2',
-        streamName: 'InStream',
-        filter: 'age > 30'
-    },
+    leftStreamEventReference: 'event2',
+    leftStreamName: 'InStream',
+    leftStreamFilter: 'age > 30',
     connectedWith: 'and',
-    right: {
-        eventReference: 'event3',
-        streamName: 'InStream',
-        filter: 'age < 50 '
-    }
+    rightStreamEventReference: 'event3',
+    rightStreamName: 'InStream',
+    rightStreamFilter: 'age < 50 '
 }
 ```
 
@@ -895,15 +887,11 @@ _The JSON for the above `notfor` event is,_
 ```
 {
     forEvery*: 'true|false',
-    left*: {
-        streamName*: '',
-        filter: ''
-    },
-    right*: {
-        eventReference: '',
-        streamName*: '',
-        filter: ''
-    }
+    leftStreamName*: '',
+    leftStreamFilter: '',
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: ''
 }
 ```
 
@@ -915,15 +903,11 @@ _The JSON for the above `notand` event is,_
 ```
 {
     forEvery: 'true',
-    left: {
-        streamName: 'InStream',
-        filter: 'age < 18'
-    },
-    right: {
-        eventReference: 'event6',
-        streamName: 'InStream',
-        filter: 'age > 30'
-    }
+    leftStreamName: 'InStream',
+    leftFilter: 'age < 18',
+    rightStreamEventReference: 'event6',
+    rightStreamName: 'InStream',
+    rightFilter: 'age > 30'
 }
 ```
 
@@ -983,17 +967,13 @@ _The JSON for the above `default` event is,_
 ##### Structure for `andor` value JSON
 ```
 {
-    firstStream*: {
-        eventReference: '',
-        streamName*: '',
-        filter: ''
-    },
+    leftStreamEventReference: '',
+    leftStreamName*: '',
+    leftStreamFilter: '',
     connectedWith*: 'and|or',
-    secondStream*: {
-        eventReference: '',
-        streamName*: '',
-        filter: ''
-    }
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: ''
 }
 ```
 
@@ -1004,17 +984,13 @@ _**Example:**_
 _The JSON for the above `andor` event is,_
 ```
 {
-    firstStream: {
-        eventReference: 'event2',
-        streamName: 'InStream',
-        filter: 'age > 18'
-    },
+    leftStreamEventReference: 'event2',
+    leftStreamName: 'InStream',
+    leftStreamFilter: 'age > 18',
     connectedWith: 'and',
-    secondStream: {
-        eventReference: 'event3',
-        streamName: 'InStream',
-        filter: 'age < 30'
-    }
+    rightStreamEventReference: 'event3',
+    rightStreamName: 'InStream',
+    rightStreamFilter: 'age < 30'
 }
 ```
 
@@ -1044,15 +1020,11 @@ _The JSON for the above `notfor` event is,_
 ##### Structure for the `notand` value JSON
 ```
 {
-    firstStream*: {
-        streamName*: '',
-        filter: ''
-    },
-    secondStream*: {
-        eventReference: '',
-        streamName*: '',
-        filter: ''
-    }
+    leftStreamName*: '',
+    leftStreamFilter: '',
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: ''
 }
 ```
 
@@ -1063,15 +1035,11 @@ _**Example:**_
 _The JSON for the above `notand` event is,_
 ```
 {
-    firstStream: {
-        streamName: 'InStream',
-        filter: 'age < 18'
-    },
-    secondStream: {
-        eventReference: 'event6',
-        streamName: 'InStream',
-        filter: 'age > 30'
-    }
+    leftStreamName: 'InStream',
+    leftStreamFilter: 'age < 18',
+    rightStreamEventReference: 'event6',
+    rightStreamName: 'InStream',
+    rightStreamFilter: 'age > 30'
 }
 ```
 
