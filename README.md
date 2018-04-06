@@ -243,7 +243,7 @@ _The JSON for the above table definition is,_
     attributeList*: {Attributes JSON Array},
     function*: ‘time|length|timeBatch|lengthBatch...’,
     parameters*: ['value1',...],
-    outputEventType: ‘{current events|expired events|all events}’,
+    outputEventType: ‘{current|expired|all}’,
     annotationList: {Annotations JSON Array}
 }
 ```
@@ -269,7 +269,7 @@ _The JSON for the above window definition is,_
     ],
     function: 'timeBatch',
     parameters: ['1 second'],
-    outputEventType: 'expired events',
+    outputEventType: 'expired',
     annotationsList: []
 }
 ```
@@ -1133,7 +1133,7 @@ Query Output Can Have 4 different output types:
 ```
 {
     type*: 'insert',
-    insert: 'current events|expired events|all events',
+    insert: 'current|expired|all',
     into*: ''
 }
 ```
@@ -1146,7 +1146,7 @@ _The JSON for the above `insert` function is,_
 ```
 {
     type: 'insert',
-    insert: 'all events',
+    insert: 'all',
     into: 'LogStream'
 }
 ```
@@ -1156,7 +1156,7 @@ _The JSON for the above `insert` function is,_
 {
     type*: 'delete',
     target*: '',
-    forEventType: 'current events|expired events|all events',
+    forEventType: 'current|expired|all',
     on*: ''
 }
 ```
@@ -1172,7 +1172,7 @@ _The JSON for the above `insert` function is,_
 {
     type: 'delete',
     target: 'RoomTypeTable',
-    forEventType: 'all events',
+    forEventType: 'all',
     on: 'RoomTypeTable.roomNo == roomNumber'
 }
 ```
@@ -1182,7 +1182,7 @@ _The JSON for the above `insert` function is,_
 {
     type*: 'update',
     target*: '',
-    forEventType: 'current events|expired events|all events',
+    forEventType: 'current|expired|all',
     set*: [
         {
             attribute*: '',
@@ -1222,7 +1222,7 @@ _The JSON for the above `update` function is,_
 {
     type*: 'update-or-insert-into',
     target*: '',
-    forEventType: 'current events|expired events|all events',
+    forEventType: 'current|expired|all',
     set*: [
         {
             attribute*: '',
