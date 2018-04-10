@@ -788,10 +788,7 @@ event, and that structure is added in the `value` attribute.
 {
     type*: 'pattern',
     eventList*: [
-        {
-            type*: 'default | andor | notfor | notand',
-            value*: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
-        },
+        {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
     ]
 }
@@ -800,6 +797,7 @@ event, and that structure is added in the `value` attribute.
 ##### Structure for `default` value JSON
 ```
 {
+    type*: 'default',
     forEvery*: 'true|false',
     eventReference: '',
     streamName*: '',
@@ -816,6 +814,7 @@ _**Example:**_
 _The JSON for the above `default` event is,_
 ```
 {
+    type: 'default',
     forEvery: 'true',
     eventReference: 'event1',
     streamName: 'InStream',
@@ -829,6 +828,7 @@ _The JSON for the above `default` event is,_
 ##### Structure for `andor` value JSON
 ```
 {
+    type*: 'andor',
     forEvery*: 'true|false',
     leftStreamEventReference: '',
     leftStreamName*: '',
@@ -847,6 +847,7 @@ _**Example:**_
 _The JSON for the above `andor` event is,_
 ```
 {
+    type: 'andor',
     forEvery: 'true',
     leftStreamEventReference: 'event2',
     leftStreamName: 'InStream',
@@ -862,6 +863,7 @@ _The JSON for the above `andor` event is,_
 ##### Structure for the `notfor` value JSON
 ```
 {
+    type*: 'notfor',
     forEvery*: 'true|false',
     streamName*: '', 
     filter: '',
@@ -876,6 +878,7 @@ _**Example:**_
 _The JSON for the above `notfor` event is,_
 ```
 {
+    type: 'notfor',
     forEvery: 'true',
     streamName: 'InStream', 
     filter: 'age >= 18',
@@ -886,6 +889,7 @@ _The JSON for the above `notfor` event is,_
 ##### Structure for the `notand` value JSON
 ```
 {
+    type*: 'notand',
     forEvery*: 'true|false',
     leftStreamName*: '',
     leftStreamFilter: '',
@@ -902,6 +906,7 @@ _**Example:**_
 _The JSON for the above `notand` event is,_
 ```
 {
+    type: 'notand',
     forEvery: 'true',
     leftStreamName: 'InStream',
     leftFilter: 'age < 18',
@@ -918,10 +923,7 @@ from the JSON structures of events in a pattern query.
 {
     type*: 'sequence',
     eventList*: [
-        {
-            type*: 'default | andor | notfor | notand',
-            value*: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
-        },
+        {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
     ]
 }
@@ -930,6 +932,7 @@ from the JSON structures of events in a pattern query.
 ##### Structure for `default` value JSON
 ```
 {
+    type*: 'default',
     forEvery*: 'true|false',
     eventReference: '',
     streamName*: '',
@@ -952,6 +955,7 @@ _**Example:**_
 _The JSON for the above `default` event is,_
 ```
 {
+    type: 'default',
     forEvery: 'true',
     eventReference: 'event1',
     streamName: 'InStream',
@@ -967,6 +971,7 @@ _The JSON for the above `default` event is,_
 ##### Structure for `andor` value JSON
 ```
 {
+    type*: 'andor',
     leftStreamEventReference: '',
     leftStreamName*: '',
     leftStreamFilter: '',
@@ -984,6 +989,7 @@ _**Example:**_
 _The JSON for the above `andor` event is,_
 ```
 {
+    type: 'andor',
     leftStreamEventReference: 'event2',
     leftStreamName: 'InStream',
     leftStreamFilter: 'age > 18',
@@ -998,6 +1004,7 @@ _The JSON for the above `andor` event is,_
 ##### Structure for the `notfor` value JSON
 ```
 {
+    type*: 'notfor',
     streamName*: '', 
     filter: '',
     forDuration*: ''
@@ -1011,6 +1018,7 @@ _**Example:**_
 _The JSON for the above `notfor` event is,_
 ```
 {
+    type: 'notfor',
     streamName: 'InStream', 
     filter: 'age >= 18',
     forDuration: '5 sec'
@@ -1020,6 +1028,7 @@ _The JSON for the above `notfor` event is,_
 ##### Structure for the `notand` value JSON
 ```
 {
+    type*: 'notand',
     leftStreamName*: '',
     leftStreamFilter: '',
     rightStreamEventReference: '',
@@ -1035,6 +1044,7 @@ _**Example:**_
 _The JSON for the above `notand` event is,_
 ```
 {
+    type: 'notand',
     leftStreamName: 'InStream',
     leftStreamFilter: 'age < 18',
     rightStreamEventReference: 'event6',
