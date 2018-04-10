@@ -788,7 +788,7 @@ event, and that structure is added in the `value` attribute.
 {
     type*: 'pattern',
     eventList*: [
-        {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
+        {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
     ]
 }
@@ -797,7 +797,7 @@ event, and that structure is added in the `value` attribute.
 ##### Structure for `default` value JSON
 ```
 {
-    type*: 'default',
+    type*: 'counting',
     forEvery*: 'true|false',
     eventReference: '',
     streamName*: '',
@@ -814,7 +814,7 @@ _**Example:**_
 _The JSON for the above `default` event is,_
 ```
 {
-    type: 'default',
+    type: 'counting',
     forEvery: 'true',
     eventReference: 'event1',
     streamName: 'InStream',
@@ -923,7 +923,7 @@ from the JSON structures of events in a pattern query.
 {
     type*: 'sequence',
     eventList*: [
-        {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
+        {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
     ]
 }
@@ -932,7 +932,7 @@ from the JSON structures of events in a pattern query.
 ##### Structure for `default` value JSON
 ```
 {
-    type*: 'default',
+    type*: 'counting',
     forEvery*: 'true|false',
     eventReference: '',
     streamName*: '',
@@ -955,7 +955,7 @@ _**Example:**_
 _The JSON for the above `default` event is,_
 ```
 {
-    type: 'default',
+    type: 'counting',
     forEvery: 'true',
     eventReference: 'event1',
     streamName: 'InStream',
