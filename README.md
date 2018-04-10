@@ -1101,7 +1101,7 @@ Query Output Can Have 4 different output types:
 ```
 {
     type*: 'insert',
-    insert: 'current|expired|all',
+    eventType: 'current|expired|all',
     target*: ''
 }
 ```
@@ -1114,7 +1114,7 @@ _The JSON for the above `insert` function is,_
 ```
 {
     type: 'insert',
-    insert: 'all',
+    eventType: 'all',
     target: 'LogStream'
 }
 ```
@@ -1313,7 +1313,7 @@ _The JSON for `TestQuery1` is,_
     output: ''
     queryOutput: {
         type: 'insert',
-        insert: '',
+        eventType: '',
         target: '#OutputStream'
     },
     annotationList: [
@@ -1363,7 +1363,7 @@ _The JSON for `TestQuery2` is,_
     output: ''
     queryOutput: {
         type: 'insert',
-        insert: '',
+        eventType: '',
         target: 'AreaTempStream'
     },
     annotationList: [
