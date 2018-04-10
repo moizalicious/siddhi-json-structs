@@ -787,7 +787,7 @@ event, and that structure is added in the `value` attribute.
 ```
 {
     type*: 'pattern',
-    events*: [
+    eventList*: [
         {
             type*: 'default | andor | notfor | notand',
             value*: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
@@ -917,7 +917,7 @@ from the JSON structures of events in a pattern query.
 ```
 {
     type*: 'sequence',
-    events*: [
+    eventList*: [
         {
             type*: 'default | andor | notfor | notand',
             value*: {Default JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON}
