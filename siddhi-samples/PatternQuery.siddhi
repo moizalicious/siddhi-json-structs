@@ -1,0 +1,13 @@
+@App:name("PatternQuery")
+@App:description('Test Pattern Queries')
+
+define stream InStream(name string, age int);
+
+from every e1=InStream[age >= 18]<1:10> ->
+    every e2=InStream[age < 30] and e3=InStream[name!="dave"] ->
+    every e4=InStream[age < 50] or e5=InStream[name!="mark"] ->
+    every not InStream[age > 60] for 5 sec ->
+    every not InStream[age < 18] and e6=InStream[age > 30]
+select e1.name, e1.age as above18
+insert into OutStream;
+
