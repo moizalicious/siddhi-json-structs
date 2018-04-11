@@ -1115,7 +1115,16 @@ _The JSON for the above `select` function is,_
 
 
 ### Query Output
-Query Output Can Have 4 different output types:
+All query outputs have the following generic structure:
+```
+{
+    type*: 'insert|delete|update|update-or-insert-into',
+    output*: {INSERT JSON|DELETE JSON|UPDATE JSON|UPDATE-OR-INSERT JSON},
+    target*: ''
+}
+```
+
+The `output` Attribute Can Be Of 4 JSON Structures:
 * Insert
 * Delete
 * Update
@@ -1124,9 +1133,7 @@ Query Output Can Have 4 different output types:
 **JSON structure for `insert` query output type:**
 ```
 {
-    type*: 'insert',
-    eventType: 'current|expired|all',
-    target*: ''
+    eventType: 'current|expired|all'
 }
 ```
 
@@ -1138,7 +1145,9 @@ _The JSON for the above `insert` function is,_
 ```
 {
     type: 'insert',
-    eventType: 'all',
+    output: {
+        eventType: 'all'
+    },
     target: 'LogStream'
 }
 ```
@@ -1146,8 +1155,6 @@ _The JSON for the above `insert` function is,_
 **JSON structure for the `delete` query output type:**
 ```
 {
-    type*: 'delete',
-    target*: '',
     forEventType: 'current|expired|all',
     on*: ''
 }
@@ -1163,17 +1170,17 @@ _The JSON for the above `insert` function is,_
 ```
 {
     type: 'delete',
+    output: {
+        forEventType: 'all',
+        on: 'RoomTypeTable.roomNo == roomNumber'
+    },
     target: 'RoomTypeTable',
-    forEventType: 'all',
-    on: 'RoomTypeTable.roomNo == roomNumber'
 }
 ```
 
 **JSON structure for the `update` query output type:**
 ```
 {
-    type*: 'update',
-    target*: '',
     forEventType: 'current|expired|all',
     set*: [
         {
@@ -1196,15 +1203,17 @@ _The JSON for the above `update` function is,_
 ```
 {
     type: 'update',
+    output: {
+        forEventType: '',
+        set: [
+            {
+                attribute: 'RoomTypeTable.people',
+                value: 'RoomTypeTable.people + arrival - exit'
+            }
+        ],
+        on: 'RoomTypeTable.roomNo == roomNumber'
+    },
     target: 'RoomTypeTable',
-    forEventType: '',
-    set: [
-        {
-            attribute: 'RoomTypeTable.people',
-            value: 'RoomTypeTable.people + arrival - exit'
-        }
-    ],
-    on: 'RoomTypeTable.roomNo == roomNumber'
 }
 ```
 
@@ -1212,8 +1221,6 @@ _The JSON for the above `update` function is,_
 **JSON structure for the `update or insert into` query output type:**
 ```
 {
-    type*: 'update-or-insert-into',
-    target*: '',
     forEventType: 'current|expired|all',
     set*: [
         {
@@ -1236,15 +1243,17 @@ _The JSON for the above `update or insert into` function is,_
 ```
 {
     type: 'update-or-insert-into',
+    output: {
+        forEventType: '',
+        set: [
+            {
+                attribute: 'RoomAssigneeTable.assignee',
+                value: 'assignee'
+            }
+        ],
+        on: 'RoomAssigneeTable.roomNo == roomNo'
+    },
     target: 'RoomAssigneeTable',
-    forEventType: '',
-    set: [
-        {
-            attribute: 'RoomAssigneeTable.assignee',
-            value: 'assignee'
-        }
-    ],
-    on: 'RoomAssigneeTable.roomNo == roomNo'
 }
 ```
 
