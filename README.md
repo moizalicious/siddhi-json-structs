@@ -790,12 +790,11 @@ event, and that structure is added in the `value` attribute.
     eventList*: [
         {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
-    ],
-    within: ''
+    ]
 }
 ```
 
-##### Structure for `default` value JSON
+##### Structure for `counting` value JSON
 ```
 {
     type*: 'counting',
@@ -804,15 +803,16 @@ event, and that structure is added in the `value` attribute.
     streamName*: '',
     filter: '',
     minCount: '',
-    maxCount: ''
+    maxCount: '',
+    within: ''
 } 
 ```
 
 _**Example:**_
 ```
--> every event1=InStream[age < 100]<21:234>
+-> every event1=InStream[age < 100]<21:234> within 10 min
 ```
-_The JSON for the above `default` event is,_
+_The JSON for the above `counting` event is,_
 ```
 {
     type: 'counting',
@@ -821,7 +821,8 @@ _The JSON for the above `default` event is,_
     streamName: 'InStream',
     filter: 'age < 100',
     minCount: '21',
-    maxCount: '234'
+    maxCount: '234',
+    within: '10 min'
 }
 ```
 
@@ -837,13 +838,14 @@ _The JSON for the above `default` event is,_
     connectedWith*: 'and|or',
     rightStreamEventReference: '',
     rightStreamName*: '',
-    rightStreamFilter: ''
+    rightStreamFilter: '',
+    within: ''
 }
 ```
 
 _**Example:**_
 ```
--> every event2=InStream[age > 30] and event3=InStream[age < 50]
+-> every event2=InStream[age > 30] and event3=InStream[age < 50] within 10 min
 ```
 _The JSON for the above `andor` event is,_
 ```
@@ -856,7 +858,8 @@ _The JSON for the above `andor` event is,_
     connectedWith: 'and',
     rightStreamEventReference: 'event3',
     rightStreamName: 'InStream',
-    rightStreamFilter: 'age < 50 '
+    rightStreamFilter: 'age < 50',
+    within: '10 min'
 }
 ```
 
@@ -896,13 +899,14 @@ _The JSON for the above `notfor` event is,_
     leftStreamFilter: '',
     rightStreamEventReference: '',
     rightStreamName*: '',
-    rightStreamFilter: ''
+    rightStreamFilter: '',
+    within: ''
 }
 ```
 
 _**Example:**_
 ```
--> every not InStream[age < 18] and event6=InStream[age > 30]
+-> every not InStream[age < 18] and event6=InStream[age > 30] within 10 min
 ```
 _The JSON for the above `notand` event is,_
 ```
@@ -913,7 +917,8 @@ _The JSON for the above `notand` event is,_
     leftFilter: 'age < 18',
     rightStreamEventReference: 'event6',
     rightStreamName: 'InStream',
-    rightFilter: 'age > 30'
+    rightFilter: 'age > 30',
+    within: '10 min'
 }
 ```
 
@@ -926,12 +931,11 @@ from the JSON structures of events in a pattern query.
     eventList*: [
         {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
-    ],
-    within: ''
+    ]
 }
 ```
 
-##### Structure for `default` value JSON
+##### Structure for `counting` value JSON
 ```
 {
     type*: 'counting',
@@ -946,13 +950,14 @@ from the JSON structures of events in a pattern query.
         << or >>
         type*: 'countingPattern',
         value*: '+|*|?'
-    }
+    },
+    within: ''
 } 
 ```
 
 _**Example:**_
 ```
-, every event1=InStream[age < 100]+
+, every event1=InStream[age < 100]+ within 10 min
 ```
 _The JSON for the above `default` event is,_
 ```
@@ -965,7 +970,8 @@ _The JSON for the above `default` event is,_
     countingSequence: {
         type: 'countingPattern',
         value: '+'
-    }
+    },
+    within: '10 min'
 }
 ```
 
@@ -980,13 +986,14 @@ _The JSON for the above `default` event is,_
     connectedWith*: 'and|or',
     rightStreamEventReference: '',
     rightStreamName*: '',
-    rightStreamFilter: ''
+    rightStreamFilter: '',
+    within: ''
 }
 ```
 
 _**Example:**_
 ```
-, event2=InStream[age > 18] and event3=InStream[age < 30]
+, event2=InStream[age > 18] and event3=InStream[age < 30] within 10 min
 ```
 _The JSON for the above `andor` event is,_
 ```
@@ -998,7 +1005,8 @@ _The JSON for the above `andor` event is,_
     connectedWith: 'and',
     rightStreamEventReference: 'event3',
     rightStreamName: 'InStream',
-    rightStreamFilter: 'age < 30'
+    rightStreamFilter: 'age < 30',
+    within: '10 min'
 }
 ```
 
@@ -1009,13 +1017,14 @@ _The JSON for the above `andor` event is,_
     type*: 'notfor',
     streamName*: '', 
     filter: '',
-    forDuration*: ''
+    forDuration*: '',
+    within: ''
 }
 ```
 
 _**Example:**_
 ```
-, not InStream[age >= 18] for 5 sec
+, not InStream[age >= 18] for 5 sec within 10 min
 ```
 _The JSON for the above `notfor` event is,_
 ```
@@ -1023,7 +1032,8 @@ _The JSON for the above `notfor` event is,_
     type: 'notfor',
     streamName: 'InStream', 
     filter: 'age >= 18',
-    forDuration: '5 sec'
+    forDuration: '5 sec',
+    within: '10 min'
 }
 ```
 
@@ -1035,13 +1045,14 @@ _The JSON for the above `notfor` event is,_
     leftStreamFilter: '',
     rightStreamEventReference: '',
     rightStreamName*: '',
-    rightStreamFilter: ''
+    rightStreamFilter: '',
+    within: ''
 }
 ```
 
 _**Example:**_
 ```
-, not InStream[age < 18] and event6=InStream[age > 30]
+, not InStream[age < 18] and event6=InStream[age > 30] within 10 min
 ```
 _The JSON for the above `notand` event is,_
 ```
@@ -1051,7 +1062,8 @@ _The JSON for the above `notand` event is,_
     leftStreamFilter: 'age < 18',
     rightStreamEventReference: 'event6',
     rightStreamName: 'InStream',
-    rightStreamFilter: 'age > 30'
+    rightStreamFilter: 'age > 30',
+    within: '10 min'
 }
 ```
 
