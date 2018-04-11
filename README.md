@@ -790,7 +790,8 @@ event, and that structure is added in the `value` attribute.
     eventList*: [
         {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
-    ]
+    ],
+    within: ''
 }
 ```
 
@@ -925,7 +926,8 @@ from the JSON structures of events in a pattern query.
     eventList*: [
         {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
         ...
-    ]
+    ],
+    within: ''
 }
 ```
 
