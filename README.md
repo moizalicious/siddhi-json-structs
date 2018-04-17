@@ -925,6 +925,7 @@ _The JSON for the above `notand` event is,_
 #### <a name="sequence">JSON structure for `sequence` query input type:</a>
 Like pattern queries a sequence query has the same JSON body structure. The structures of the events are different 
 from the JSON structures of events in a pattern query.
+
 ```
 {
     type*: 'sequence',
@@ -934,6 +935,9 @@ from the JSON structures of events in a pattern query.
     ]
 }
 ```
+
+**Note - The `forEvery` value for a JSON in the `eventList` can only be true _if that event is the first event
+of the entire `eventList`_**
 
 ##### Structure for `counting` value JSON
 ```
@@ -980,6 +984,7 @@ _The JSON for the above `default` event is,_
 ```
 {
     type*: 'andor',
+    forEvery*: 'true|false',
     leftStreamEventReference: '',
     leftStreamName*: '',
     leftStreamFilter: '',
@@ -999,6 +1004,7 @@ _The JSON for the above `andor` event is,_
 ```
 {
     type: 'andor',
+    forEvery: 'false',
     leftStreamEventReference: 'event2',
     leftStreamName: 'InStream',
     leftStreamFilter: 'age > 18',
@@ -1015,6 +1021,7 @@ _The JSON for the above `andor` event is,_
 ```
 {
     type*: 'notfor',
+    forEvery*: 'true|false',
     streamName*: '', 
     filter: '',
     forDuration*: '',
@@ -1030,6 +1037,7 @@ _The JSON for the above `notfor` event is,_
 ```
 {
     type: 'notfor',
+    forEvery: 'false',
     streamName: 'InStream', 
     filter: 'age >= 18',
     forDuration: '5 sec',
@@ -1041,6 +1049,7 @@ _The JSON for the above `notfor` event is,_
 ```
 {
     type*: 'notand',
+    forEvery*: 'true|false',
     leftStreamName*: '',
     leftStreamFilter: '',
     rightStreamEventReference: '',
@@ -1058,6 +1067,7 @@ _The JSON for the above `notand` event is,_
 ```
 {
     type: 'notand',
+    forEvery: 'false',
     leftStreamName: 'InStream',
     leftStreamFilter: 'age < 18',
     rightStreamEventReference: 'event6',
