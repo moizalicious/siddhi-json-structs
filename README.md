@@ -17,10 +17,26 @@
     1. [Query Input](#query-input)
         1. [Window-Filter-Projection Query](#window-filter-projection)
         2. [Join Query](#join)
+            1. [Join Stream](#join-stream)
+            2. [Join Table](#join-table)
+            3. [Join Aggregation](#join-aggregation)
+            4. [Join Window](#join-window)
         3. [Pattern Query](#pattern)
+            1. [Counting Pattern](#counting-pattern)
+            2. [AND-OR Pattern](#andor-pattern)
+            3. [NOT-FOR Pattern](#notfor-pattern)
+            4. [NOT-AND Pattern](#notand-pattern)
         4. [Sequence Query](#sequence)
+            1. [Counting Sequence](#counting-sequence)
+            2. [AND-OR Sequence](#andor-sequence)
+            3. [NOT-FOR Sequence](#notfor-sequence)
+            4. [NOT-AND sequence](#notand-sequence)
     2. [Query Select](#query-select)
     3. [Query Output](#query-output)
+        1. [Insert](#insert)
+        2. [Delete](#delete)
+        3. [Update](#update)
+        4. [Update Or Insert](#update-or-insert)
 10. [Partition Definition](#partition-definition)
 
 ## General Types
@@ -537,7 +553,7 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 
 The way to identify a join query is using the `joinWith` attribute.
 
-##### JSON structure for the `Join Stream` type query
+##### <a name="join-stream">JSON structure for the `Join Stream` type query</a>
 ```
 {
     type*: 'join',
@@ -606,7 +622,7 @@ _The JSON for the above `Join Stream` input is,_
 
 
 
-##### JSON structure for the `Join Table` type query
+##### <a name="join-table">JSON structure for the `Join Table` type query</a>
 ```
 {
     type*: 'join',
@@ -669,7 +685,7 @@ _The JSON for the above `Join Table` input is,_
 ```
 
 
-##### JSON structure for the `Join Aggregation` type query
+##### <a name="join-aggregation">JSON structure for the `Join Aggregation` type query</a>
 ```
 {
     type*: 'join',
@@ -732,7 +748,7 @@ _The JSON for the above `Join Aggregation` input is,_
 ```
 
 
-##### JSON structure for the `Join Window` type query
+##### <a name="join-window">JSON structure for the `Join Window` type query</a>
 ```
 {
     type*: 'join',
@@ -794,7 +810,7 @@ event, and that structure is added in the `value` attribute.
 }
 ```
 
-##### Structure for `counting` value JSON
+##### <a name="counting-pattern">Structure for `counting` value JSON</a>
 ```
 {
     type*: 'counting',
@@ -827,7 +843,7 @@ _The JSON for the above `counting` event is,_
 ```
 
 
-##### Structure for `andor` value JSON
+##### <a name="andor-pattern">Structure for `andor` value JSON</a>
 ```
 {
     type*: 'andor',
@@ -864,7 +880,7 @@ _The JSON for the above `andor` event is,_
 ```
 
 
-##### Structure for the `notfor` value JSON
+##### <a name="notfor-pattern">Structure for the `notfor` value JSON</a>
 ```
 {
     type*: 'notfor',
@@ -890,7 +906,7 @@ _The JSON for the above `notfor` event is,_
 }
 ```
 
-##### Structure for the `notand` value JSON
+##### <a name="notand-pattern">Structure for the `notand` value JSON</a>
 ```
 {
     type*: 'notand',
@@ -939,7 +955,7 @@ from the JSON structures of events in a pattern query.
 **Note - The `forEvery` value for a JSON in the `eventList` can only be true _if that event is the first event
 of the entire `eventList`_**
 
-##### Structure for `counting` value JSON
+##### <a name="counting-sequence">Structure for `counting` value JSON</a>
 ```
 {
     type*: 'counting',
@@ -980,7 +996,7 @@ _The JSON for the above `default` event is,_
 ```
 
 
-##### Structure for `andor` value JSON
+##### <a name="andor-sequence">Structure for `andor` value JSON</a>
 ```
 {
     type*: 'andor',
@@ -1017,7 +1033,7 @@ _The JSON for the above `andor` event is,_
 ```
 
 
-##### Structure for the `notfor` value JSON
+##### <a name="notfor-sequence">Structure for the `notfor` value JSON</a>
 ```
 {
     type*: 'notfor',
@@ -1045,7 +1061,7 @@ _The JSON for the above `notfor` event is,_
 }
 ```
 
-##### Structure for the `notand` value JSON
+##### <a name="notand-sequence">Structure for the `notand` value JSON</a>
 ```
 {
     type*: 'notand',
@@ -1140,7 +1156,7 @@ The `output` Attribute Can Be Of 4 JSON Structures:
 * Update
 * Update or insert into
 
-**JSON structure for `insert` query output type:**
+#### <a name="insert">JSON structure for `insert` query output type:</a>
 ```
 {
     eventType: 'current|expired|all'
@@ -1162,7 +1178,7 @@ _The JSON for the above `insert` function is,_
 }
 ```
 
-**JSON structure for the `delete` query output type:**
+#### <a name="delete">JSON structure for the `delete` query output type:</a>
 ```
 {
     forEventType: 'current|expired|all',
@@ -1188,7 +1204,7 @@ _The JSON for the above `insert` function is,_
 }
 ```
 
-**JSON structure for the `update` query output type:**
+#### <a name="update">JSON structure for the `update` query output type:</a>
 ```
 {
     forEventType: 'current|expired|all',
@@ -1228,7 +1244,7 @@ _The JSON for the above `update` function is,_
 ```
 
 
-**JSON structure for the `update or insert into` query output type:**
+#### <a name="update-or-insert">JSON structure for the `update or insert into` query output type:</a>
 ```
 {
     forEventType: 'current|expired|all',
