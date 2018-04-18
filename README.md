@@ -78,7 +78,7 @@ and have the following JSON structure.
         values*: [
             {
                 value: '',
-                isString: 'true|false'
+                isString: true|false
             },
             ...
         ]
@@ -90,7 +90,7 @@ and have the following JSON structure.
         values*: {
             'option1': {
                 value: '',
-                isString: 'true|false'
+                isString: true|false
             },
             ...
         }
@@ -279,7 +279,7 @@ _The JSON for the above window definition is,_
 {
     id*: ‘’,
     name*: ‘’,
-    at*: ‘{every|start|cron-expression}’
+    at*: ‘’
     annotationList: {Annotations JSON Array}
 }
 ```
@@ -305,7 +305,7 @@ _The JSON for the above trigger definition is,_
     name*: ‘’,
     from*: ‘’,
     select*: {
-        type*: 'user-defined',
+        type*: 'user_defined',
         value*: [
             {
                 expression*: '',
@@ -343,7 +343,7 @@ _The JSON for the above aggregation definition is,_
     name: 'TradeAggregation',
     from: 'TradeStream',
     select: {
-        type: 'user-defined',
+        type: 'user_defined',
         value: [
             {
                 expression: 'symbol',
@@ -498,7 +498,7 @@ The query input can be of the following types:
 #### <a name="window-filter-projection">JSON Structure for `Window-Filter-Projection` query input type:</a>
 ```
 {
-    type*: 'window-filter-projection',
+    type*: 'window_filter_projection',
     from*: '',
     filter: '',
     window: {
@@ -517,7 +517,7 @@ select ...
 _The JSON for the above `Window-Filter-Projection` input is,_
 ```
 {
-    type: 'window-filter-projection',
+    type: 'window_filter_projection',
     from: 'InputStream',
     filter: 'age >= 18',
     window: {
@@ -549,10 +549,10 @@ The way to identify a join query is using the `joinWith` attribute.
             function*: '',
             paramters*: ['value1',...],
         },
-        isUnidirectional: 'true|false', // Only one 'isUnidirectional' value can be true at a time
+        isUnidirectional: true|false, // Only one 'isUnidirectional' value can be true at a time
         as: ''
     },
-    joinType*: 'join|left outer|right outer|full outer',
+    joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {
         name*: '',
         filter: '', // If there is a filter, then there must be a window
@@ -560,7 +560,7 @@ The way to identify a join query is using the `joinWith` attribute.
             function*: '',
             paramters*: ['value1',...],
         },
-        isUnidirectional: 'true|false', // Only one 'isUnidirectional' value can be true at a time
+        isUnidirectional: true|false, // Only one 'isUnidirectional' value can be true at a time
         as: ''
     },
     on*: ''
@@ -620,7 +620,7 @@ _The JSON for the above `Join Stream` input is,_
         },
         as: ''
     },
-    joinType*: 'join|left outer|right outer|full outer',
+    joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {
         name*: '',
         filter: '',
@@ -683,7 +683,7 @@ _The JSON for the above `Join Table` input is,_
         },
         as: ''
     },
-    joinType*: 'join|left outer|right outer|full outer',
+    joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {
         name*: '',
         filter: '',
@@ -798,7 +798,7 @@ event, and that structure is added in the `value` attribute.
 ```
 {
     type*: 'counting',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     eventReference: '',
     streamName*: '',
     filter: '',
@@ -831,7 +831,7 @@ _The JSON for the above `counting` event is,_
 ```
 {
     type*: 'andor',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     leftStreamEventReference: '',
     leftStreamName*: '',
     leftStreamFilter: '',
@@ -868,7 +868,7 @@ _The JSON for the above `andor` event is,_
 ```
 {
     type*: 'notfor',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     streamName*: '', 
     filter: '',
     forDuration*: ''
@@ -894,7 +894,7 @@ _The JSON for the above `notfor` event is,_
 ```
 {
     type*: 'notand',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     leftStreamName*: '',
     leftStreamFilter: '',
     rightStreamEventReference: '',
@@ -943,7 +943,7 @@ of the entire `eventList`_**
 ```
 {
     type*: 'counting',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     eventReference: '',
     streamName*: '',
     filter: '',
@@ -984,7 +984,7 @@ _The JSON for the above `default` event is,_
 ```
 {
     type*: 'andor',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     leftStreamEventReference: '',
     leftStreamName*: '',
     leftStreamFilter: '',
@@ -1021,7 +1021,7 @@ _The JSON for the above `andor` event is,_
 ```
 {
     type*: 'notfor',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     streamName*: '', 
     filter: '',
     forDuration*: '',
@@ -1049,7 +1049,7 @@ _The JSON for the above `notfor` event is,_
 ```
 {
     type*: 'notand',
-    forEvery*: 'true|false',
+    forEvery*: true|false,
     leftStreamName*: '',
     leftStreamFilter: '',
     rightStreamEventReference: '',
@@ -1080,7 +1080,7 @@ _The JSON for the above `notand` event is,_
 ### Query Select
 ```
 {
-    type*: 'user-defined',
+    type*: 'user_defined',
     value*: [
         {
             expression*: '',
@@ -1101,7 +1101,7 @@ select Stream1.id as UID, avg(price) as avgPrice, ((TempStream.temp - 32) * 5)/9
 _The JSON for the above `select` function is,_
 ```
 {
-    type: 'user-defined',
+    type: 'user_defined',
     value: [
         {
             expression: 'Stream1.id',
@@ -1252,7 +1252,7 @@ update or insert into RoomAssigneeTable
 _The JSON for the above `update or insert into` function is,_
 ```
 {
-    type: 'update-or-insert-into',
+    type: 'update_or_insert_into',
     output: {
         forEventType: '',
         set: [
@@ -1342,7 +1342,7 @@ _The JSON for `TestQuery1` is,_
 {
     id: 'TestQuery1',
     queryInput: {
-        type: 'window-filter-projection',
+        type: 'window_filter_projection',
         from: 'TempStream',
         filter: '',
         window: {}
@@ -1375,7 +1375,7 @@ _The JSON for `TestQuery2` is,_
 {
     id: 'TestQuery2',
     queryInput: {
-        type: 'window-filter-projection',
+        type: 'window_filter_projection',
         from: 'TempStream',
         filter: '',
         window: {
@@ -1385,7 +1385,7 @@ _The JSON for `TestQuery2` is,_
         }
     },
     select: {
-        type: 'user-defined',
+        type: 'user_defined',
         value: [
             {
                 expression: 'roomNo',
