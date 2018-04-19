@@ -515,6 +515,7 @@ The query input can be of the following types:
 ```
 {
     type*: 'window_filter_projection',
+    subType*: 'window|filter|projection',
     from*: '',
     filter: '',
     window: {
@@ -534,6 +535,7 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 ```
 {
     type: 'window_filter_projection',
+    subType: 'window',
     from: 'InputStream',
     filter: 'age >= 18',
     window: {
