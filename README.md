@@ -497,7 +497,15 @@ All queries have the following body structure
     id*: '',
     queryInput*: {Query Input JSON},
     select*: {Query Select JSON},
-    groupBy: ['value1',...], 
+    groupBy: ['value1',...],
+    orderBy: [
+        {
+            value*: '',
+            order: 'asc|desc'
+        },
+        ...
+    ],
+    limit: <integer|long>, 
     having: '',
     outputRateLimit: ''
     queryOutput*: {Query Output JSON},
@@ -1141,7 +1149,6 @@ _The JSON for the above `select` function is,_
 }
 ```
 
-
 ### Query Output
 All query outputs have the following generic structure:
 ```
@@ -1369,7 +1376,9 @@ _The JSON for `TestQuery1` is,_
         type: 'all',
         value: '*'
     },
-    groupBy: [], 
+    groupBy: [],
+    orderBy: [],
+    limit: '', 
     having: '',
     output: ''
     queryOutput: {
@@ -1419,7 +1428,9 @@ _The JSON for `TestQuery2` is,_
             }
         ]
     },
-    groupBy: [], 
+    groupBy: [],
+    orderBy: [],
+    limit: '',
     having: '',
     output: ''
     queryOutput: {
