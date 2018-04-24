@@ -575,8 +575,8 @@ The way to identify a join query is using the `joinWith` attribute.
             function*: '',
             paramters*: ['value1',...],
         },
-        isUnidirectional: true|false, // Only one 'isUnidirectional' value can be true at a time
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {
@@ -586,8 +586,8 @@ The way to identify a join query is using the `joinWith` attribute.
             function*: '',
             paramters*: ['value1',...],
         },
-        isUnidirectional: true|false, // Only one 'isUnidirectional' value can be true at a time
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     on*: ''
 }
@@ -612,8 +612,8 @@ _The JSON for the above `Join Stream` input is,_
             function: 'time',
             parameters: ['1 min']
         },
-        isUnidirectional: 'false',
-        as: 'T'
+        as: 'T',
+        isUnidirectional: false
     },
     joinType: 'join',
     right: {
@@ -623,8 +623,8 @@ _The JSON for the above `Join Stream` input is,_
             function: 'length',
             parameters: ['1']
         },
-        isUnidirectional: 'false',
-        as: 'R'
+        as: 'R',
+        isUnidirectional: false
     },
     on: 'T.roomNo == R.roomNo'
 }
@@ -644,7 +644,8 @@ _The JSON for the above `Join Stream` input is,_
             function: '',
             parameters: ['value1',...]
         },
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {
@@ -654,7 +655,8 @@ _The JSON for the above `Join Stream` input is,_
             function: '',
             parameters: ['value1',...]
         },
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     on*: ''
 }
@@ -678,7 +680,8 @@ _The JSON for the above `Join Table` input is,_
             function: 'time',
             parameters: ['10 min']
         },
-        as: 'T'
+        as: 'T',
+        isUnidirectional: false
     },
     joinType: 'join',
     right: {
@@ -688,7 +691,8 @@ _The JSON for the above `Join Table` input is,_
             function: 'length',
             parameters: ['20']
         },
-        as: 'R'
+        as: 'R',
+        isUnidirectional: false
     },
     on: 'R.roomNo == T.roomNo'
 }
@@ -707,7 +711,8 @@ _The JSON for the above `Join Table` input is,_
             function: '',
             parameters: ['value1',...]
         },
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {
@@ -717,7 +722,8 @@ _The JSON for the above `Join Table` input is,_
             function: '',
             parameters: ['value1',...]
         },
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     on: '',
     within*: '',
@@ -742,14 +748,16 @@ _The JSON for the above `Join Aggregation` input is,_
         name: 'StockStream',
         filter: '',
         window: {},
-        as: 'S'
+        as: 'S',
+        isUnidirectional: false
     },
     joinType: 'join',
     right: {
         name: 'TradeAggregation',
         filter: '',
         window: {},
-        as: 'T'
+        as: 'T',
+        isUnidirectional: false
     },
     on: 'S.symbol == T.symbol',
     within: '\"2014-02-15 00:00:00 +05:30\", \"2014-03-16 00:00:00 +05:30\"',
@@ -770,12 +778,14 @@ _The JSON for the above `Join Aggregation` input is,_
             function*: '',
             parameters*: ['value1',...]
         },
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     right*: {
         name*: '',
         filter: '',
-        as: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
     },
     on*: ''
 }
@@ -796,12 +806,14 @@ _The JSON for the above `Join Window` input is,_
         name: 'CheckStream',
         filter: '',
         window: {},
-        as: 'C'
+        as: 'C',
+        isUnidirectional: false
     },
     right: {
         name: 'TwoMinTempWindow',
         filter: '',
-        as: 'T'
+        as: 'T',
+        isUnidirectional: false
     },
     on: 'T.temp > 40'
 }
