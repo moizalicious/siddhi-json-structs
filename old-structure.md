@@ -21,7 +21,16 @@
             2. [Join Table](#join-table)
             3. [Join Aggregation](#join-aggregation)
             4. [Join Window](#join-window)
-        3. [Pattern & Sequence Query](#pattern-sequence)
+        3. [Pattern Query](#pattern)
+            1. [Counting Pattern](#counting-pattern)
+            2. [AND-OR Pattern](#andor-pattern)
+            3. [NOT-FOR Pattern](#notfor-pattern)
+            4. [NOT-AND Pattern](#notand-pattern)
+        4. [Sequence Query](#sequence)
+            1. [Counting Sequence](#counting-sequence)
+            2. [AND-OR Sequence](#andor-sequence)
+            3. [NOT-FOR Sequence](#notfor-sequence)
+            4. [NOT-AND sequence](#notand-sequence)
     2. [Query Select](#query-select)
     3. [Query Output](#query-output)
         1. [Insert](#insert)
@@ -482,7 +491,7 @@ _The JSON for the above sink definition is,_
 ```
 
 ## Query Definition
-All queries have the following JSON body structure
+All queries have the following body structure
 ```
 {
     id*: '',
@@ -511,14 +520,10 @@ The query input can be of the following types:
 * Pattern & Sequence
 
 #### <a name="window-filter-projection">JSON Structure for `Window-Filter-Projection` query input type:</a>
-Note that for this type there are a few conditions for each type even though they have the same JSON structure:
-* If the `type` is `window`, then the query must have a window and can have an optional filter.
-* If the `type` is `filter`, then the query must have a filter.
-* If the `type` is `projection`, then the query will not have a filter or projection.
-
 ```
 {
-    type*: 'window|filter|projection',
+    type*: 'window_filter_projection',
+    subType*: 'window|filter|projection',
     from*: '',
     filter: '',
     window: {
@@ -537,7 +542,8 @@ select ...
 _The JSON for the above `Window-Filter-Projection` input is,_
 ```
 {
-    type: 'window',
+    type: 'window_filter_projection',
+    subType: 'window',
     from: 'InputStream',
     filter: 'age >= 18',
     window: {
@@ -549,45 +555,181 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 ```
 
 #### <a name="join">JSON Structure for `Join` query input type:</a>
-A `join` query can be one of 4 types:
+`join` queries can be broken down to 4 types:
 * Join Stream
 * Join Table
 * Join Aggregation
 * Join Window
 
-The way to identify a join query type is by using the `joinWith` attribute. However all 4 of these join types will be defined using the same JSON structure.
+The way to identify a join query is using the `joinWith` attribute.
+
+##### <a name="join-stream">JSON structure for the `Join Stream` type query</a>
 ```
 {
     type*: 'join',
-    joinWith*: 'stream|table|window|aggregation',
-    left*: {Join Element JSON},
+    joinWith*: 'stream'
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, then there must be a window
+        window: {
+            function*: '',
+            paramters*: ['value1',...],
+        },
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
     joinType*: 'join|left_outer|right_outer|full_outer',
-    right*: {Join Element JSON},
-    on: '',
-    within: '', // Only If joinWith == aggregation
-    per: '' // Only If joinWith == aggregation
+    right*: {
+        name*: '',
+        filter: '', // If there is a filter, then there must be a window
+        window: {
+            function*: '',
+            paramters*: ['value1',...],
+        },
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    on*: ''
 }
 ```
-The `Join Element JSON` has the following structure:
+
+_**Example:**_
+```
+from TempStream[temp > 30.0]#window.time(1 min) as T
+    join RegulatorStream[isOn == false]#window.length(1) as R
+    on T.roomNo == R.roomNo
+select ...
+```
+_The JSON for the above `Join Stream` input is,_
 ```
 {
-    type*: 'stream|table|window|aggregation',
-    from*: '',
-    filter: '', // If there is a filter, there must be a window.
-    window: {   
-        function*: '',
-        parameters*: ['value1',...]
+    type: 'join',
+    joinWith: 'stream',
+    left: {
+        name: 'TempStream',
+        filter: 'temp > 30.0',
+        window: {
+            function: 'time',
+            parameters: ['1 min']
+        },
+        as: 'T',
+        isUnidirectional: false
     },
-    as: '',
-    isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    joinType: 'join',
+    right: {
+        name: 'RegulatorStream',
+        filter: 'isOn == false',
+        window: {
+            function: 'length',
+            parameters: ['1']
+        },
+        as: 'R',
+        isUnidirectional: false
+    },
+    on: 'T.roomNo == R.roomNo'
 }
 ```
-There are a few conditions that must be met for a join query input to be a valid one:
-* Atleast one, `left` or `right` JSON value must be of stream type, or else it is not a valid join query input.
-* If a `Join element JSON` is of type `window`, then that element's window attribute must be null. This is because a window definition cannot have another window within it.
-* If there is a `Join Element JSON` of type `aggregation`, then the `within` and `per` attributes in the JSON structure cannot be null. If there is no aggregation definition, then those attributes have to be null.
-* If a `Join Element JSON` has a `window`, then it must have a filter as well or else it is invalid.
-* Only one `Join Element JSON` can be marked as `isUnderectional: true`.
+
+
+
+##### <a name="join-table">JSON structure for the `Join Table` type query</a>
+```
+{
+    type*: 'join',
+    joinWith*: 'table',
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, then there must be a window.
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    joinType*: 'join|left_outer|right_outer|full_outer',
+    right*: {
+        name*: '',
+        filter: '',
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    on*: ''
+}
+```
+_**Example:**_
+```
+from TempStream[temp > 25.0]#window.time(10 min) as T 
+    join RoomTypeTable[roomNo > 100]#window.length(20) as R
+    on R.roomNo == T.roomNo
+select ...
+```
+_The JSON for the above `Join Table` input is,_
+```
+{
+    type: 'join',
+    joinWith: 'table',
+    left: {
+        name: 'TempStream',
+        filter: 'temp > 25.0',
+        window: {
+            function: 'time',
+            parameters: ['10 min']
+        },
+        as: 'T',
+        isUnidirectional: false
+    },
+    joinType: 'join',
+    right: {
+        name: 'RoomTypeTable',
+        filter: 'roomNo > 100',
+        window: {
+            function: 'length',
+            parameters: ['20']
+        },
+        as: 'R',
+        isUnidirectional: false
+    },
+    on: 'R.roomNo == T.roomNo'
+}
+```
+
+
+##### <a name="join-aggregation">JSON structure for the `Join Aggregation` type query</a>
+```
+{
+    type*: 'join',
+    joinWith*: 'aggregation',
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, there must be a window.
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    joinType*: 'join|left_outer|right_outer|full_outer',
+    right*: {
+        name*: '',
+        filter: '',
+        window: {
+            function: '',
+            parameters: ['value1',...]
+        },
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    on: '',
+    within*: '',
+    per*: ''
+}
+```
 
 _**Example:**_
 ```
@@ -603,7 +745,7 @@ _The JSON for the above `Join Aggregation` input is,_
     type: 'join',
     joinWith: 'aggregation',
     left: {
-        from: 'StockStream',
+        name: 'StockStream',
         filter: '',
         window: {},
         as: 'S',
@@ -611,7 +753,7 @@ _The JSON for the above `Join Aggregation` input is,_
     },
     joinType: 'join',
     right: {
-        from: 'TradeAggregation',
+        name: 'TradeAggregation',
         filter: '',
         window: {},
         as: 'T',
@@ -623,72 +765,355 @@ _The JSON for the above `Join Aggregation` input is,_
 }
 ```
 
-#### <a name="pattern-sequence">JSON Structure for `Pattern` & `Sequence` query input types:</a>
-The JSON structure for both patterns & sequences are identical:
+
+##### <a name="join-window">JSON structure for the `Join Window` type query</a>
 ```
 {
-    type*: 'pattern|sequence',
-    conditionList*: [
-        {
-            id: '',
-            streamName*: '',
-            filter: ''
+    type*: 'join',
+    joinWith*: 'window',
+    left*: {
+        name*: '',
+        filter: '', // If there is a filter, there must be a window.
+        window: {
+            function*: '',
+            parameters*: ['value1',...]
         },
-        ...
-    ],
-    logic*: ''
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    right*: {
+        name*: '',
+        filter: '',
+        as: '',
+        isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    },
+    on*: ''
 }
 ```
 
-_**Example**_
+_**Example:**_
 ```
-from every event1=InStream[age < 100]<21:234> within 10 min ->
-    every event2=InStream[age > 30] and event3=InStream[age < 50]->
-    every not InStream[age >= 18] for 5 sec ->
-    every not InStream[age < 18] and event6=InStream[age > 30]
+from CheckStream as C join TwoMinTempWindow as T
+    on T.temp > 40
 select ...
 ```
-_The above pattern input is defined by the following JSON structure:_
+_The JSON for the above `Join Window` input is,_
 ```
 {
-    type: 'pattern',
-    conditionList: [
-        {
-            id: 'event1',
-            streamName: 'InStream',
-            filter: 'age < 100'
-        },
-        {
-            id: 'event2',
-            streamName: 'InStream',
-            filter: 'age > 30'
-        },
-        {
-            id: 'event3',
-            streamName: 'InStream',
-            filter: 'age < 50'
-        },
-        {
-            id: 'event4',
-            streamName: 'InStream',
-            filter: 'age >= 18'
-        },
-        {
-            id: 'event5',
-            streamName: 'InStream',
-            filter: 'age >= 18'
-        },
-        {
-            id: 'event5',
-            streamName: 'InStream',
-            filter: 'age >= 18'
-        }
-    ],
-    logic: 'every event1<21:234> within 10 min -> every event2 and event3 -> every not event4 for 5 sec -> every not event5 and event6'
+    type: 'join',
+    joinWith: 'window',
+    left: {
+        name: 'CheckStream',
+        filter: '',
+        window: {},
+        as: 'C',
+        isUnidirectional: false
+    },
+    right: {
+        name: 'TwoMinTempWindow',
+        filter: '',
+        as: 'T',
+        isUnidirectional: false
+    },
+    on: 'T.temp > 40'
 }
 ```
-**Note - If their is a `not` statement before an `id` in the `logic` attribute, then the `id` will not be displayed in the _source view_.**
 
+#### <a name="pattern">JSON structure for `pattern` query input type:</a>
+All pattern queries have the following JSON structure. The JSON structure of the events depends on the type of each 
+event, and that structure is added in the `value` attribute.
+```
+{
+    type*: 'pattern',
+    eventList*: [
+        {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
+        ...
+    ]
+}
+```
+
+##### <a name="counting-pattern">Structure for `counting` value JSON</a>
+```
+{
+    type*: 'counting',
+    forEvery*: true|false,
+    eventReference: '',
+    streamName*: '',
+    filter: '',
+    minCount: '',
+    maxCount: '',
+    within: ''
+} 
+```
+
+_**Example:**_
+```
+-> every event1=InStream[age < 100]<21:234> within 10 min
+```
+_The JSON for the above `counting` event is,_
+```
+{
+    type: 'counting',
+    forEvery: 'true',
+    eventReference: 'event1',
+    streamName: 'InStream',
+    filter: 'age < 100',
+    minCount: '21',
+    maxCount: '234',
+    within: '10 min'
+}
+```
+
+
+##### <a name="andor-pattern">Structure for `andor` value JSON</a>
+```
+{
+    type*: 'andor',
+    forEvery*: true|false,
+    leftStreamEventReference: '',
+    leftStreamName*: '',
+    leftStreamFilter: '',
+    connectedWith*: 'and|or',
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: '',
+    within: ''
+}
+```
+
+_**Example:**_
+```
+-> every event2=InStream[age > 30] and event3=InStream[age < 50] within 10 min
+```
+_The JSON for the above `andor` event is,_
+```
+{
+    type: 'andor',
+    forEvery: 'true',
+    leftStreamEventReference: 'event2',
+    leftStreamName: 'InStream',
+    leftStreamFilter: 'age > 30',
+    connectedWith: 'and',
+    rightStreamEventReference: 'event3',
+    rightStreamName: 'InStream',
+    rightStreamFilter: 'age < 50',
+    within: '10 min'
+}
+```
+
+
+##### <a name="notfor-pattern">Structure for the `notfor` value JSON</a>
+```
+{
+    type*: 'notfor',
+    forEvery*: true|false,
+    streamName*: '', 
+    filter: '',
+    forDuration*: ''
+}
+```
+
+_**Example:**_
+```
+-> every not InStream[age >= 18] for 5 sec
+```
+_The JSON for the above `notfor` event is,_
+```
+{
+    type: 'notfor',
+    forEvery: 'true',
+    streamName: 'InStream', 
+    filter: 'age >= 18',
+    forDuration: '5 sec'
+}
+```
+
+##### <a name="notand-pattern">Structure for the `notand` value JSON</a>
+```
+{
+    type*: 'notand',
+    forEvery*: true|false,
+    leftStreamName*: '',
+    leftStreamFilter: '',
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: '',
+    within: ''
+}
+```
+
+_**Example:**_
+```
+-> every not InStream[age < 18] and event6=InStream[age > 30] within 10 min
+```
+_The JSON for the above `notand` event is,_
+```
+{
+    type: 'notand',
+    forEvery: 'true',
+    leftStreamName: 'InStream',
+    leftFilter: 'age < 18',
+    rightStreamEventReference: 'event6',
+    rightStreamName: 'InStream',
+    rightFilter: 'age > 30',
+    within: '10 min'
+}
+```
+
+#### <a name="sequence">JSON structure for `sequence` query input type:</a>
+Like pattern queries a sequence query has the same JSON body structure. The structures of the events are different 
+from the JSON structures of events in a pattern query.
+
+```
+{
+    type*: 'sequence',
+    eventList*: [
+        {COUNTING JSON | ANDOR JSON | NOTFOR JSON | NOTAND JSON},
+        ...
+    ]
+}
+```
+
+**Note - The `forEvery` value for a JSON in the `eventList` can only be true _if that event is the first event
+of the entire `eventList`_**
+
+##### <a name="counting-sequence">Structure for `counting` value JSON</a>
+```
+{
+    type*: 'counting',
+    forEvery*: true|false,
+    eventReference: '',
+    streamName*: '',
+    filter: '',
+    countingSequence: {
+        type*: 'minMax',
+        minCount: '',
+        maxCount: ''
+        << or >>
+        type*: 'countingPattern',
+        value*: '+|*|?'
+    },
+    within: ''
+} 
+```
+
+_**Example:**_
+```
+, every event1=InStream[age < 100]+ within 10 min
+```
+_The JSON for the above `default` event is,_
+```
+{
+    type: 'counting',
+    forEvery: 'true',
+    eventReference: 'event1',
+    streamName: 'InStream',
+    filter: 'age < 100',
+    countingSequence: {
+        type: 'countingPattern',
+        value: '+'
+    },
+    within: '10 min'
+}
+```
+
+
+##### <a name="andor-sequence">Structure for `andor` value JSON</a>
+```
+{
+    type*: 'andor',
+    forEvery*: true|false,
+    leftStreamEventReference: '',
+    leftStreamName*: '',
+    leftStreamFilter: '',
+    connectedWith*: 'and|or',
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: '',
+    within: ''
+}
+```
+
+_**Example:**_
+```
+, event2=InStream[age > 18] and event3=InStream[age < 30] within 10 min
+```
+_The JSON for the above `andor` event is,_
+```
+{
+    type: 'andor',
+    forEvery: 'false',
+    leftStreamEventReference: 'event2',
+    leftStreamName: 'InStream',
+    leftStreamFilter: 'age > 18',
+    connectedWith: 'and',
+    rightStreamEventReference: 'event3',
+    rightStreamName: 'InStream',
+    rightStreamFilter: 'age < 30',
+    within: '10 min'
+}
+```
+
+
+##### <a name="notfor-sequence">Structure for the `notfor` value JSON</a>
+```
+{
+    type*: 'notfor',
+    forEvery*: true|false,
+    streamName*: '', 
+    filter: '',
+    forDuration*: '',
+    within: ''
+}
+```
+
+_**Example:**_
+```
+, not InStream[age >= 18] for 5 sec within 10 min
+```
+_The JSON for the above `notfor` event is,_
+```
+{
+    type: 'notfor',
+    forEvery: 'false',
+    streamName: 'InStream', 
+    filter: 'age >= 18',
+    forDuration: '5 sec',
+    within: '10 min'
+}
+```
+
+##### <a name="notand-sequence">Structure for the `notand` value JSON</a>
+```
+{
+    type*: 'notand',
+    forEvery*: true|false,
+    leftStreamName*: '',
+    leftStreamFilter: '',
+    rightStreamEventReference: '',
+    rightStreamName*: '',
+    rightStreamFilter: '',
+    within: ''
+}
+```
+
+_**Example:**_
+```
+, not InStream[age < 18] and event6=InStream[age > 30] within 10 min
+```
+_The JSON for the above `notand` event is,_
+```
+{
+    type: 'notand',
+    forEvery: 'false',
+    leftStreamName: 'InStream',
+    leftStreamFilter: 'age < 18',
+    rightStreamEventReference: 'event6',
+    rightStreamName: 'InStream',
+    rightStreamFilter: 'age > 30',
+    within: '10 min'
+}
+```
 
 ### Query Select
 ```
