@@ -31,7 +31,7 @@ These are general structures that are used in most of the siddhi element definit
 alone elements (that is why they do not have an 'id'). 
 
 ### Key-Value Pair JSON
-This just is used to define a map of key-value pair and is named as `{Key-Value Pair JSON}` when the structure 
+This is used to define a map of key-value pair and is named as `{Key-Value Pair JSON}` when the structure 
 is referred.
 ```
 {
@@ -41,9 +41,7 @@ is referred.
 ```
 
 ### Attributes
-_**NOTE - The JSON attributes that end with a `*` symbol means that the attribute cannot be left null/empty**_
-
-Defines attributes of a Stream, Table etc.. that have the same format. So they all use the same structure 
+Define's attributes of a Stream, Table etc.. that have the same format. So they all use the same structure 
 which is named `attributeList` where ever they are used in a element definition.
 ```
 [
@@ -54,6 +52,7 @@ which is named `attributeList` where ever they are used in a element definition.
     ...
 ]
 ```
+_**NOTE - The JSON attributes that end with a `*` symbol means that the attribute cannot be left null/empty**_
 
 _**Example:** To define the attributes `(name string, age int)` the JSON structure would look like this,_
 ```
@@ -123,10 +122,10 @@ structure would look like this,_
 ```
 
 **Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different 
-structure and are show separately**
+structure and are shown separately**
 
 ### Store
-The store annotation is only used for tables and aggregations. So they are only defined in both table and 
+**The store annotation is only used for tables and aggregations**. So they are only defined in both table and 
 aggregation JSON structs as the name `store` in the following format:
 ```
 {
@@ -171,7 +170,7 @@ _The JSON for the above store definition is,_
 _**Example:**_
 ```
 @Async(buffer.size="1024")
-define stream InStream(name string, age int);
+define stream InStream (name string, age int);
 ```
 _The JSON for the above stream definition is,_
 ```
@@ -200,7 +199,7 @@ _The JSON for the above stream definition is,_
     ]
 }
 ```
-**Note that if a stream is an inner stream, then it's attributes cannot be defined. 
+**Note that if a stream is an inner stream, then it's attributes cannot be defined and it cannot have any annotations. 
 Have to handle this in another way.**
 
 ## Table Definition
@@ -216,7 +215,7 @@ Have to handle this in another way.**
 
 _**Example:**_
 ```
-define table InTable(name string, age int);
+define table InTable (name string, age int);
 ```
 _The JSON for the above table definition is,_
 ```
@@ -246,7 +245,7 @@ _The JSON for the above table definition is,_
     attributeList*: {Attributes JSON Array},
     function*: ‘time|length|timeBatch|lengthBatch...’,
     parameters*: ['value1',...],
-    outputEventType: ‘{current|expired|all}’,
+    outputEventType: ‘current|expired|all’,
     annotationList: {Annotations JSON Array}
 }
 ```
@@ -307,19 +306,7 @@ _The JSON for the above trigger definition is,_
     id*: ‘’,
     name*: ‘’,
     from*: ‘’,
-    select*: {
-        type*: 'user_defined',
-        value*: [
-            {
-                expression*: '',
-                as: ''
-            },
-            ...
-        ]
-        << or >>
-        type*: 'all',
-        value*: '*'
-    },
+    select*: {Query Select JSON},
     groupBy: ['value1',...],
     aggregateByAttribute*: '',
     aggregateByTimePeriod*: {
@@ -337,7 +324,7 @@ define aggregation TradeAggregation
     from TradeStream
         select symbol, avg(price) as avgPrice, sum(price) as total
         group by symbol
-        aggregate by timestamp every sec ... year;
+        aggregate by timestamp every sec...year;
 ```
 _The JSON for the above aggregation definition is,_
 ```
@@ -509,9 +496,8 @@ The query input can be of the following types:
 #### <a name="window-filter-projection">JSON Structure for `Window-Filter-Projection` query input type:</a>
 Note that for this type there are a few conditions for each type even though they have the same JSON structure:
 * If the `type` is `window`, then the query must have a window and can have an optional filter.
-* If the `type` is `filter`, then the query must have a filter.
-* If the `type` is `projection`, then the query will not have a filter or projection.
-
+* If the `type` is `filter`, then the query must have a filter and no window.
+* If the `type` is `projection`, then the query cannot have a filter or window.
 ```
 {
     type*: 'window|filter|projection',
@@ -551,7 +537,8 @@ A `join` query can be one of 4 types:
 * Join Aggregation
 * Join Window
 
-The way to identify a join query type is by using the `joinWith` attribute. However all 4 of these join types will be defined using the same JSON structure.
+The way to identify a join query type is by using the `joinWith` attribute. 
+However all 4 of these join types will be defined using the same JSON structure.
 ```
 {
     type*: 'join',
@@ -560,8 +547,8 @@ The way to identify a join query type is by using the `joinWith` attribute. Howe
     joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {Join Element JSON},
     on: '',
-    within: '', // Only If joinWith == aggregation
-    per: '' // Only If joinWith == aggregation
+    within: '', // If joinWith == aggregation
+    per: '' // If joinWith == aggregation
 }
 ```
 The `Join Element JSON` has the following structure:
@@ -569,21 +556,21 @@ The `Join Element JSON` has the following structure:
 {
     type*: 'stream|table|window|aggregation',
     from*: '',
-    filter: '', // If there is a filter, there must be a window.
+    filter: '', // If there is a filter, there must be a window for joins (the only exception is when type = window).
     window: {   
         function*: '',
         parameters*: ['value1',...]
     },
     as: '',
-    isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time
+    isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time (either left definition|right definition|none)
 }
 ```
 There are a few conditions that must be met for a join query input to be a valid one:
 * Atleast one, `left` or `right` JSON value must be of stream type, or else it is not a valid join query input.
 * If a `Join element JSON` is of type `window`, then that element's window attribute must be null. This is because a window definition cannot have another window within it.
 * If there is a `Join Element JSON` of type `aggregation`, then the `within` and `per` attributes in the JSON structure cannot be null. If there is no aggregation definition, then those attributes have to be null.
-* If a `Join Element JSON` has a `window`, then it must have a filter as well or else it is invalid.
-* Only one `Join Element JSON` can be marked as `isUnderectional: true`.
+* If a `Join Element JSON` has a `window`, then it must have a filter as well or else it is invalid (except if that element is of type `window` definition).
+* Only one `Join Element JSON` can be marked as `isUnderectional: true`. It is either the left definition, right definition or neither of them.
 
 _**Example:**_
 ```
@@ -599,6 +586,7 @@ _The JSON for the above `Join Aggregation` input is,_
     type: 'join',
     joinWith: 'aggregation',
     left: {
+        type: 'stream',
         from: 'StockStream',
         filter: '',
         window: {},
@@ -607,6 +595,7 @@ _The JSON for the above `Join Aggregation` input is,_
     },
     joinType: 'join',
     right: {
+        type: 'aggregation',
         from: 'TradeAggregation',
         filter: '',
         window: {},
@@ -683,8 +672,35 @@ _The above pattern input is defined by the following JSON structure:_
     logic: 'every event1<21:234> within 10 min -> every event2 and event3 -> every not event4 for 5 sec -> every not event5 and event6'
 }
 ```
-**Note - If their is a `not` statement before an `id` in the `logic` attribute, then the `id` will not be displayed in the _source view_.**
-
+**Note - If their is a `not` statement before an `id` in the `logic` attribute, then that `id` will not be displayed in the _source view_.**
+_For an example:_
+```
+{
+    type: 'sequence',
+    conditionList: [
+        {
+            id: 'e1',
+            streamName*: 'InStream',
+            filter: 'age >= 18'
+        },
+        {
+            id: 'e2',
+            streamName*: 'InStream',
+            filter: 'age < 30'
+        }
+    ],
+    logic: 'every e1+ within 10 min, not e2 for 10 min'
+}
+```
+The siddhi code for the above JSON would look like this:
+```
+from 
+    every e1=InStream[age >= 18], 
+    not InStream[age < 30] for 10 min
+select ...
+```
+Notice that the second sequence `not InStream[age < 30] for 10 min` does not have the phrase 
+`"e2="` reference like `e1` does because it has a `not` statement before it.
 
 ### Query Select
 ```
