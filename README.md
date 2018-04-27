@@ -789,7 +789,7 @@ _The JSON for the above `insert` function is,_
 #### <a name="delete">JSON structure for the `delete` query output type:</a>
 ```
 {
-    forEventType: 'current|expired|all',
+    eventType: 'current|expired|all',
     on*: ''
 }
 ```
@@ -805,7 +805,7 @@ _The JSON for the above `insert` function is,_
 {
     type: 'delete',
     output: {
-        forEventType: 'all',
+        eventType: 'all',
         on: 'RoomTypeTable.roomNo == roomNumber'
     },
     target: 'RoomTypeTable',
@@ -815,7 +815,7 @@ _The JSON for the above `insert` function is,_
 #### <a name="update">JSON structure for the `update` query output type:</a>
 ```
 {
-    forEventType: 'current|expired|all',
+    eventType: 'current|expired|all',
     set*: [
         {
             attribute*: '',
@@ -838,7 +838,7 @@ _The JSON for the above `update` function is,_
 {
     type: 'update',
     output: {
-        forEventType: '',
+        eventType: '',
         set: [
             {
                 attribute: 'RoomTypeTable.people',
@@ -855,7 +855,7 @@ _The JSON for the above `update` function is,_
 #### <a name="update-or-insert">JSON structure for the `update or insert into` query output type:</a>
 ```
 {
-    forEventType: 'current|expired|all',
+    eventType: 'current|expired|all',
     set*: [
         {
             attribute*: '',
@@ -878,7 +878,7 @@ _The JSON for the above `update or insert into` function is,_
 {
     type: 'update_or_insert_into',
     output: {
-        forEventType: '',
+        eventType: '',
         set: [
             {
                 attribute: 'RoomAssigneeTable.assignee',
