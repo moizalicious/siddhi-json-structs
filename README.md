@@ -506,8 +506,8 @@ Note that for this type there are a few conditions for each type even though the
     window: {
         function*: '',
         parameters*: ['value1',...],
-        filter: ''
     }
+    postWindowFilter: ''
 }
 ```
 
@@ -525,8 +525,8 @@ _The JSON for the above `Window-Filter-Projection` input is,_
     window: {
         function: 'time',
         parameters: ['1 hour'],
-        filter: 'age < 30'
     }
+    postWindowFilter: 'age < 30'
 }
 ```
 
@@ -969,7 +969,8 @@ _The JSON for `TestQuery1` is,_
         type: 'window_filter_projection',
         from: 'TempStream',
         filter: '',
-        window: {}
+        window: {},
+        postWindowFilter: ''
     },
     select: {
         type: 'all',
@@ -1007,8 +1008,8 @@ _The JSON for `TestQuery2` is,_
         window: {
             function: 'time',
             parameters: ['10 min'],
-            filter: ''
         }
+        postWindowFilter: ''
     },
     select: {
         type: 'user_defined',
