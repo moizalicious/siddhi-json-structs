@@ -245,7 +245,7 @@ _The JSON for the above table definition is,_
     attributeList*: {Attributes JSON Array},
     function*: ‘time|length|timeBatch|lengthBatch...’,
     parameters*: ['value1',...],
-    outputEventType: ‘current|expired|all’,
+    outputEventType: ‘current_events|expired_events|all_events’,
     annotationList: {Annotations JSON Array}
 }
 ```
@@ -767,7 +767,7 @@ The `output` Attribute Can Be Of 4 JSON Structures:
 #### <a name="insert">JSON structure for `insert` query output type:</a>
 ```
 {
-    eventType: 'current|expired|all'
+    eventType: 'current_events|expired_events|all_events'
 }
 ```
 
@@ -789,7 +789,7 @@ _The JSON for the above `insert` function is,_
 #### <a name="delete">JSON structure for the `delete` query output type:</a>
 ```
 {
-    eventType: 'current|expired|all',
+    eventType: 'current_events|expired_events|all_events',
     on*: ''
 }
 ```
@@ -815,7 +815,7 @@ _The JSON for the above `insert` function is,_
 #### <a name="update">JSON structure for the `update` query output type:</a>
 ```
 {
-    eventType: 'current|expired|all',
+    eventType: 'current_events|expired_events|all_events',
     set*: [
         {
             attribute*: '',
@@ -855,7 +855,7 @@ _The JSON for the above `update` function is,_
 #### <a name="update-or-insert">JSON structure for the `update or insert into` query output type:</a>
 ```
 {
-    eventType: 'current|expired|all',
+    eventType: 'current_events|expired_events|all_events',
     set*: [
         {
             attribute*: '',
