@@ -530,19 +530,23 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 }
 ```
 
+**Please note that even triggers can be used in window-filter-projection queries as they are treated as
+ streams underneath in the siddhi runtime**
+
 #### <a name="join">JSON Structure for `Join` query input type:</a>
 A `join` query can be one of 4 types:
 * Join Stream
 * Join Table
 * Join Aggregation
 * Join Window
+* Join Trigger
 
 The way to identify a join query type is by using the `joinWith` attribute. 
 However all 4 of these join types will be defined using the same JSON structure.
 ```
 {
     type*: 'join',
-    joinWith*: 'stream|table|window|aggregation',
+    joinWith*: 'stream|table|window|aggregation|trigger',
     left*: {Join Element JSON},
     joinType*: 'join|left_outer|right_outer|full_outer',
     right*: {Join Element JSON},
@@ -554,7 +558,7 @@ However all 4 of these join types will be defined using the same JSON structure.
 The `Join Element JSON` has the following structure:
 ```
 {
-    type*: 'stream|table|window|aggregation',
+    type*: 'stream|table|window|aggregation|trigger',
     from*: '',
     filter: '', // If there is a filter, there must be a window for joins (the only exception is when type = window).
     window: {   
@@ -566,7 +570,7 @@ The `Join Element JSON` has the following structure:
 }
 ```
 There are a few conditions that must be met for a join query input to be a valid one:
-* Atleast one, `left` or `right` JSON value must be of stream type, or else it is not a valid join query input.
+* Atleast one, `left` or `right` JSON value must be of **stream or trigger type**, or else it is not a valid join query input.
 * If a `Join element JSON` is of type `window`, then that element's window attribute must be null. This is because a window definition cannot have another window within it.
 * If there is a `Join Element JSON` of type `aggregation`, then the `within` and `per` attributes in the JSON structure cannot be null. If there is no aggregation definition, then those attributes have to be null.
 * If a `Join Element JSON` has a `window`, then it must have a filter as well or else it is invalid (except if that element is of type `window` definition).
