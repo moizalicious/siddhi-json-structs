@@ -573,7 +573,7 @@ There are a few conditions that must be met for a join query input to be a valid
 * Atleast one, `left` or `right` JSON value must be of **stream or trigger type**, or else it is not a valid join query input.
 * If a `Join element JSON` is of type `window`, then that element's window attribute must be null. This is because a window definition cannot have another window within it.
 * If there is a `Join Element JSON` of type `aggregation`, then the `within` and `per` attributes in the JSON structure cannot be null. If there is no aggregation definition, then those attributes have to be null.
-* If a `Join Element JSON` has a `window`, then it must have a filter as well or else it is invalid (except if that element is of type `window` definition).
+* If a `Join Element JSON` has a `filter`, then it must have a window as well or else it is invalid (except if that element is of type `window` definition).
 * Only one `Join Element JSON` can be marked as `isUnderectional: true`. It is either the left definition, right definition or neither of them.
 
 _**Example:**_
