@@ -308,7 +308,7 @@ _The JSON for the above trigger definition is,_
     from*: ‘’,
     select*: {Query Select JSON},
     groupBy: ['value1',...],
-    aggregateByAttribute*: '',
+    aggregateByAttribute: '',
     aggregateByTimePeriod*: {
         minValue*: '', // Atleast one value should be added, and that will be marked as the minValue
         maxValue: '' // Max value is added if the user wants to define a range of timestamps
