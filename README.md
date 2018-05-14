@@ -619,7 +619,7 @@ The JSON structure for both patterns & sequences are identical:
     type*: 'pattern|sequence',
     conditionList*: [
         {
-            id: '',
+            conditionId*: '',
             streamName*: '',
             filter: ''
         },
@@ -643,52 +643,52 @@ _The above pattern input is defined by the following JSON structure:_
     type: 'pattern',
     conditionList: [
         {
-            id: 'event1',
+            conditionId: 'event1',
             streamName: 'InStream',
             filter: 'age < 100'
         },
         {
-            id: 'event2',
+            conditionId: 'event2',
             streamName: 'InStream',
             filter: 'age > 30'
         },
         {
-            id: 'event3',
+            conditionId: 'event3',
             streamName: 'InStream',
             filter: 'age < 50'
         },
         {
-            id: 'event4',
+            conditionId: 'event4',
             streamName: 'InStream',
             filter: 'age >= 18'
         },
         {
-            id: 'event5',
+            conditionId: 'event5',
             streamName: 'InStream',
-            filter: 'age >= 18'
+            filter: 'age < 18'
         },
         {
-            id: 'event5',
+            conditionId: 'event6',
             streamName: 'InStream',
-            filter: 'age >= 18'
+            filter: 'age > 30'
         }
     ],
     logic: 'every event1<21:234> within 10 min -> every event2 and event3 -> every not event4 for 5 sec -> every not event5 and event6'
 }
 ```
-**Note - If their is a `not` statement before an `id` in the `logic` attribute, then that `id` will not be displayed in the _source view_.**
+**Note - If their is a `not` statement before a `conditionId` in the `logic` attribute, then that `conditionId` will not be displayed in the _source view_.**
 _For an example:_
 ```
 {
     type: 'sequence',
     conditionList: [
         {
-            id: 'e1',
+            conditionId: 'e1',
             streamName*: 'InStream',
             filter: 'age >= 18'
         },
         {
-            id: 'e2',
+            conditionId: 'e2',
             streamName*: 'InStream',
             filter: 'age < 30'
         }
