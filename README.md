@@ -5,7 +5,8 @@
     1. [Key-Value Pair JSON](#key-value-pair-json)
     2. [Attributes](#attributes)
     3. [Annotations](#annotations)
-    4. [Store](#store)    
+    4. [Store](#store)  
+    5. [Query Filter/Function/Window](#query-filter/function/window)  
 2. [Stream Definition](#stream-definition)
 3. [Table Definition](#table-definition)
 4. [Window Definition](#window-definition)
@@ -116,7 +117,61 @@ _The JSON for the above store definition is,_
     }
 }
 ```                  
-                  
+
+### Query Filter/Function/Window
+Streams in queries can have multiple filters and functions, but only one window.
+* If the query is of type `window-filter-projection`, then it's window can be placed anywhere in the input stream element section.
+* If the query is of type `join`, then it's last element in the input stream element must end with a Window (i.e. If the input stream element has atleast one function or filter).
+* If the query is of type `pattern & sequence`, then it's input stream element cannot have any window at all.
+
+The JSON structure (denoted as `filterFunctionWindowList` in other JSON structures) for an 
+input stream element Filter/Function/Window in a query is given below,
+```
+[
+    {
+        type*: 'FILTER',
+        value*: ''
+    },
+    << and|or >>
+    {
+        type*: 'FUNCTION|WINDOW',
+        value*: {
+            function*: '',
+            parameters*: ['value1',...],
+        }
+    },
+    ...
+]
+```
+
+_**Example:** Consider the following `filterFunctionWindowList` of a plain `window-filter-projection` query_
+```
+from Instream[name == 'Mark']#window.time(10 min)#str:tokenize('<Test>', '<Test Regex>')
+select ...
+```
+The JSON for the above example would look like this,
+```
+[
+    {
+        type: 'FILTER',
+        value: 'name == \'Mark\''
+    },
+    {
+        type: 'WINDOW',
+        value: {
+            function: 'time',
+            parameters: ['10 min']
+        }
+    },
+    {
+        type: 'FUNCTION',
+        value: {
+            function: 'str:tokenize',
+            parameters: ['<Test>', '<Test Regex>']
+        }
+    }
+]
+```   
 
 ## Stream Definition
 ```
@@ -321,7 +376,7 @@ _The JSON for the above aggregation definition is,_
     name*: '',
     scriptType*: 'JAVASCRIPT|R|SCALA',
     returnType*: '',
-    logic*: ''
+    script*: ''
 }
 ```
 _**Example**_
@@ -341,7 +396,7 @@ _The JSON for the above function definition is,_
     name: 'concatFn',
     scriptType: 'JAVASCRIPT',
     returnType: 'STRING',
-    logic: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
+    script: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
 }
 ```
 
@@ -464,7 +519,7 @@ All queries have the following JSON body structure
         },
         ...
     ],
-    limit: <integer|long>, 
+    limit: <long>, 
     having: '',
     outputRateLimit: ''
     queryOutput*: {Query Output JSON},
@@ -487,12 +542,7 @@ Note that for this type there are a few conditions for each type even though the
 {
     type*: 'window|filter|projection',
     from*: '',
-    filter: '',
-    window: {
-        function*: '',
-        parameters*: ['value1',...],
-    }
-    postWindowFilter: ''
+    filterFunctionWindowList: {Query Filter/Function/Window}
 }
 ```
 
@@ -506,12 +556,23 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 {
     type: 'window',
     from: 'InputStream',
-    filter: 'age >= 18',
-    window: {
-        function: 'time',
-        parameters: ['1 hour'],
-    }
-    postWindowFilter: 'age < 30'
+    filterFunctionWindowList: [
+        {
+            type: 'FILTER',
+            value: 'age >= 18'
+        },
+        {
+            type: 'WINDOW',
+            value: {
+                function: 'time',
+                parameters: ['1 hour']
+            }
+        },
+        {
+            type: 'FILTER',
+            value: 'age < 30'
+        }
+    ]
 }
 ```
 
@@ -555,7 +616,7 @@ The `Join Element JSON` has the following structure:
 }
 ```
 There are a few conditions that must be met for a join query input to be a valid one:
-* Atleast one, `left` or `right` JSON value must be of **stream or trigger type**, or else it is not a valid join query input.
+* At least one, `left` or `right` JSON value must be of **stream or trigger type**, or else it is not a valid join query input.
 * If a `Join element JSON` is of type `window`, then that element's window attribute must be null. This is because a window definition cannot have another window within it.
 * If there is a `Join Element JSON` of type `aggregation`, then the `within` and `per` attributes in the JSON structure cannot be null. If there is no aggregation definition, then those attributes have to be null.
 * If a `Join Element JSON` has a `filter`, then it must have a window as well or else it is invalid (except if that element is of type `window` definition).
