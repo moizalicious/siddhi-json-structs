@@ -13,9 +13,8 @@
 5. [Trigger Definition](#trigger-definition)
 6. [Aggregation Definition](#aggregation-definition)
 7. [Function Definition](#function-definition)
-8. [Source Definition](#source-definition)
-9. [Sink Definition](#sink-definition)
-10. [Query Definition](#query-definition)
+8. [Source & Sink Definition](#source-&-sink-definition)
+9. [Query Definition](#query-definition)
     1. [Query Input](#query-input)
         1. [Window-Filter-Projection Query](#window-filter-projection)
         2. [Join Query](#join)
@@ -26,7 +25,7 @@
         2. [Delete](#delete)
         3. [Update](#update)
         4. [Update Or Insert](#update-or-insert)
-11. [Partition Definition](#partition-definition)
+10. [Partition Definition](#partition-definition)
 
 ## General Types
 These are general structures that are used in most of the siddhi element definitions, they are not stand 
@@ -400,10 +399,11 @@ _The JSON for the above function definition is,_
 }
 ```
 
-## Source Definition
+## Source & Sink Definition
 ```
 {
     id*: ‘’,
+    definitionType: 'SINK|SOURCE'
     type*: ‘’,
     options: {Key-Value Pair JSON},
     map: {
@@ -418,11 +418,19 @@ _The JSON for the above function definition is,_
             type*: ‘list’
             value*: ['value1',...]
         }
+        << or >>
+        attributes: {
+            type*: 'single',
+            value*: ''
+        }
     }
 }
 ```
+**IMPORTANT**
+* Map attributes for sources are either key-value pair JSON or list (no single), but the map attributes for sinks are either key-value pair JSON or single (no list).
+* If the `definitionType` is _SOURCE_ then the map attributes are denoted using `@attributes(...)`, but if the definitionType is _SINK_ then the map attributes are defined as `@payload(...)` in Siddhi.
 
-_**Example:**_
+_**Example 1 (Source):**_
 ```
 @Source(
     type = 'http',
@@ -435,6 +443,7 @@ _The JSON for the above source definition is,_
 ```
 {
     id: '<UUID>',
+    definitionType: 'SOURCE',
     type: 'http',
     options: {
         'receiver.url': 'http://localhost:8006/productionStream',
@@ -448,29 +457,7 @@ _The JSON for the above source definition is,_
 }
 ```                   
 
-## Sink Definition
-```
-{
-    id*: ‘’,
-    type*: ‘’,
-    options: {Key-Value Pair JSON},
-    map: {
-        type*: ‘’,
-        options: {Key-Value Pair JSON},
-        payload: {
-            type*: ‘map’,
-            value*: {Key-Value Pair JSON}
-        }
-        << or  >>
-        payload: {
-            type*: 'single',
-            value*: ''
-        }
-    }
-}
-```
-
-_**Example:**_
+_**Example 2 (Sink):**_
 ```
 @sink(
     type='http',
@@ -487,6 +474,7 @@ _The JSON for the above sink definition is,_
 ```
 {
     id: '<UUID>',
+    definitionType: 'SINK'
     type: 'http',
     options: {
         'publisher.url': 'http://localhost:8005/endpoint',
@@ -499,7 +487,7 @@ _The JSON for the above sink definition is,_
     map: {
         type: 'json',
         options: {},
-        payload: {}
+        attributes: {}
     }
 }
 ```
