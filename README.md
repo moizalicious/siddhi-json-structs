@@ -428,7 +428,7 @@ _The JSON for the above function definition is,_
 ```
 **IMPORTANT**
 * Map attributes for sources are either key-value pair JSON or list (no single), but the map attributes for sinks are either key-value pair JSON or single (no list).
-* If the `definitionType` is _SOURCE_ then the map attributes are denoted using `@attributes(...)`, but if the definitionType is _SINK_ then the map attributes are defined as `@payload(...)` in Siddhi.
+* If the `annotationType` is _SOURCE_ then the map attributes are denoted using `@attributes(...)`, but if the definitionType is _SINK_ then the map attributes are defined as `@payload(...)` in Siddhi.
 
 _**Example 1 (Source):**_
 ```
