@@ -11,9 +11,9 @@
 4. [Window Definition](#window-definition)
 5. [Trigger Definition](#trigger-definition)
 6. [Aggregation Definition](#aggregation-definition)
-7. [Source Definition](#source-definition)
-8. [Sink Definition](#sink-definition)
-9. [Function Definition](#function-definition)
+7. [Function Definition](#function-definition)
+8. [Source Definition](#source-definition)
+9. [Sink Definition](#sink-definition)
 10. [Query Definition](#query-definition)
     1. [Query Input](#query-input)
         1. [Window-Filter-Projection Query](#window-filter-projection)
@@ -48,7 +48,7 @@ which is named `attributeList` where ever they are used in a element definition.
 [
     {
         name*: ‘’,
-        type*: ‘string|int|long|double|float|bool|object’
+        type*: ‘STRING|INT|LONG|DOUBLE|FLOAT|BOOL|OBJECT’
     },
     ...
 ]
@@ -60,11 +60,11 @@ _**Example:** To define the attributes `(name string, age int)` the JSON structu
 [
     {
         name: 'name',
-        type: 'string'
+        type: 'STRING'
     },
     {
         name: 'age',
-        type: 'int'
+        type: 'INT'
     }
 ]
 ```
@@ -74,52 +74,13 @@ Defines the annotations of any Siddhi element, as all annotations have somewhat 
 They are defined in as a part of a Siddhi element using the name `annotationList`, 
 and have the following JSON structure.
 ```
-[
-    {
-        name*: ‘’,
-        type*: ‘list’,
-        values*: [
-            {
-                value: '',
-                isString: true|false
-            },
-            ...
-        ]
-    },
-    << and|or >>
-    {
-        name*: ‘’
-        type*: ‘map’,
-        values*: {
-            'option1': {
-                value: '',
-                isString: true|false
-            },
-            ...
-        }
-    },
-    ...
-]
-
+["annotation1", "annotation2", ...]
 ```
 
 _**Example:** To define the annotations `@Async(buffer.size='1024') @PrimaryKey('name','age')` the JSON 
 structure would look like this,_
 ```
-[
-    {
-        name: 'Async',
-        type: 'map',
-        value: {
-            'buffer.size': '1024'
-        }
-    },
-    {
-        name: 'PrimaryKey',
-        type: 'list',
-        values: ['name', 'age']
-    }
-]
+["@Async(buffer.size='1024')", "@PrimaryKey('name', 'age')"]
 ```
 
 **Note - Sources, Sinks & Stores do not come under the general annotation struct as they have a different 
@@ -182,22 +143,14 @@ _The JSON for the above stream definition is,_
     attributeList: [
         {
             name: 'name',
-            type: 'string'
+            type: 'STRING'
         },
         {
             name: 'age',
-            type: 'int'
+            type: 'INT'
         }
     ],
-    annotationList: [
-        {
-            name: 'Async',
-            type: 'map',
-            values: {
-                'buffer.size': '1024'
-            }
-        }
-    ]
+    annotationList: ["@Async(buffer.size='1024')"]
 }
 ```
 **Note that if a stream is an inner stream, then it's attributes cannot be defined and it cannot have any annotations. 
@@ -226,11 +179,11 @@ _The JSON for the above table definition is,_
     attributeList: [
         {
             name: 'name',
-            type: 'string'
+            type: 'STRING'
         },
         {
             name: 'age',
-            type: 'int'
+            type: 'INT'
         }
     ],
     store: {},
@@ -361,6 +314,37 @@ _The JSON for the above aggregation definition is,_
 }
 ```
 
+## Function Definition
+```
+{
+    id*: '',
+    name*: '',
+    scriptType*: 'JAVASCRIPT|R|SCALA',
+    returnType*: '',
+    logic*: ''
+}
+```
+_**Example**_
+```
+define function concatFn[javascript] return string {
+    var str1 = data[0];
+    var str2 = data[1];
+    var str3 = data[2];
+    var responce = str1 + str2 + str3;
+    return responce;
+};
+```
+_The JSON for the above function definition is,_
+```
+{
+    id: '<UIID or FnNAME>',
+    name: 'concatFn',
+    scriptType: 'JAVASCRIPT',
+    returnType: 'STRING',
+    logic: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
+}
+```
+
 ## Source Definition
 ```
 {
@@ -462,37 +446,6 @@ _The JSON for the above sink definition is,_
         options: {},
         payload: {}
     }
-}
-```
-
-## Function Definition
-```
-{
-    id*: '',
-    name*: '',
-    scriptType*: 'JAVASCRIPT|R|SCALA',
-    returnType*: '',
-    logic*: ''
-}
-```
-_**Example**_
-```
-define function concatFn[javascript] return string {
-    var str1 = data[0];
-    var str2 = data[1];
-    var str3 = data[2];
-    var responce = str1 + str2 + str3;
-    return responce;
-};
-```
-_The JSON for the above function definition is,_
-```
-{
-    id: '<UIID or FnNAME>',
-    name: 'concatFn',
-    scriptType: 'JAVASCRIPT',
-    returnType: 'STRING',
-    logic: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
 }
 ```
 
