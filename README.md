@@ -6,7 +6,7 @@
     2. [Attributes](#attributes)
     3. [Annotations](#annotations)
     4. [Store](#store)  
-    5. [Query Filter/Function/Window](#query-filter-function-window)  
+    5. [Query Filter-Function-Window](#query-filter-function-window)  
 2. [Stream Definition](#stream-definition)
 3. [Table Definition](#table-definition)
 4. [Window Definition](#window-definition)
@@ -376,10 +376,10 @@ _The JSON for the above aggregation definition is,_
     name*: '',
     scriptType*: 'JAVASCRIPT|R|SCALA',
     returnType*: '',
-    script*: ''
+    body*: ''
 }
 ```
-_**Example**_
+_**Example:**_
 ```
 define function concatFn[javascript] return string {
     var str1 = data[0];
@@ -392,11 +392,11 @@ define function concatFn[javascript] return string {
 _The JSON for the above function definition is,_
 ```
 {
-    id: '<UIID or FnNAME>',
+    id: '',
     name: 'concatFn',
     scriptType: 'JAVASCRIPT',
     returnType: 'STRING',
-    script: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
+    body: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
 }
 ```
 
