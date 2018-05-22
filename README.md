@@ -13,7 +13,8 @@
 6. [Aggregation Definition](#aggregation-definition)
 7. [Source Definition](#source-definition)
 8. [Sink Definition](#sink-definition)
-9. [Query Definition](#query-definition)
+9. [Function Definition](#function-definition)
+10. [Query Definition](#query-definition)
     1. [Query Input](#query-input)
         1. [Window-Filter-Projection Query](#window-filter-projection)
         2. [Join Query](#join)
@@ -24,7 +25,7 @@
         2. [Delete](#delete)
         3. [Update](#update)
         4. [Update Or Insert](#update-or-insert)
-10. [Partition Definition](#partition-definition)
+11. [Partition Definition](#partition-definition)
 
 ## General Types
 These are general structures that are used in most of the siddhi element definitions, they are not stand 
@@ -461,6 +462,37 @@ _The JSON for the above sink definition is,_
         options: {},
         payload: {}
     }
+}
+```
+
+## Function Definition
+```
+{
+    id*: '',
+    name*: '',
+    scriptType*: 'JAVASCRIPT|R|SCALA',
+    returnType*: '',
+    logic*: ''
+}
+```
+_**Example**_
+```
+define function concatFn[javascript] return string {
+    var str1 = data[0];
+    var str2 = data[1];
+    var str3 = data[2];
+    var responce = str1 + str2 + str3;
+    return responce;
+};
+```
+_The JSON for the above function definition is,_
+```
+{
+    id: '<UIID or FnNAME>',
+    name: 'concatFn',
+    scriptType: 'JAVASCRIPT',
+    returnType: 'STRING',
+    logic: 'var str1 = data[0];\nvar str2 = data[1];\nvar str3 = data[2];\nvar responce = str1 + str2 + str3;\nreturn responce;'
 }
 ```
 
