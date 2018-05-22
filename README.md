@@ -6,7 +6,7 @@
     2. [Attributes](#attributes)
     3. [Annotations](#annotations)
     4. [Store](#store)  
-    5. [Query Filter/Function/Window](#query-filter/function/window)  
+    5. [Query Filter/Function/Window](#query-filter-function-window)  
 2. [Stream Definition](#stream-definition)
 3. [Table Definition](#table-definition)
 4. [Window Definition](#window-definition)
@@ -118,7 +118,7 @@ _The JSON for the above store definition is,_
 }
 ```                  
 
-### Query Filter/Function/Window
+### Query Filter-Function-Window
 Streams in queries can have multiple filters and functions, but only one window.
 * If the query is of type `window-filter-projection`, then it's window can be placed anywhere in the input stream element section.
 * If the query is of type `join`, then it's last element in the input stream element must end with a Window (i.e. If the input stream element has atleast one function or filter).
