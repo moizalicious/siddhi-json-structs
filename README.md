@@ -13,7 +13,7 @@
 5. [Trigger Definition](#trigger-definition)
 6. [Aggregation Definition](#aggregation-definition)
 7. [Function Definition](#function-definition)
-8. [Source & Sink Definition](#source-&-sink-definition)
+8. [Source & Sink Definition](#source-and-sink-definition)
 9. [Query Definition](#query-definition)
     1. [Query Input](#query-input)
         1. [Window-Filter-Projection Query](#window-filter-projection)
@@ -399,7 +399,7 @@ _The JSON for the above function definition is,_
 }
 ```
 
-## Source & Sink Definition
+## Source And Sink Definition
 ```
 {
     id*: ‘’,
