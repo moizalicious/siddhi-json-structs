@@ -403,7 +403,7 @@ _The JSON for the above function definition is,_
 ```
 {
     id*: ‘’,
-    definitionType: 'SINK|SOURCE'
+    annotationType: 'SINK|SOURCE'
     type*: ‘’,
     options: {Key-Value Pair JSON},
     map: {
@@ -443,7 +443,7 @@ _The JSON for the above source definition is,_
 ```
 {
     id: '<UUID>',
-    definitionType: 'SOURCE',
+    annotationType: 'SOURCE',
     type: 'http',
     options: {
         'receiver.url': 'http://localhost:8006/productionStream',
@@ -474,7 +474,7 @@ _The JSON for the above sink definition is,_
 ```
 {
     id: '<UUID>',
-    definitionType: 'SINK'
+    annotationType: 'SINK'
     type: 'http',
     options: {
         'publisher.url': 'http://localhost:8005/endpoint',
