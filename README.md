@@ -409,20 +409,7 @@ _The JSON for the above function definition is,_
     map: {
         type*: ‘’,
         options: ['option1', 'option2=value2',...],
-        attributes: {
-            type*: ‘map’
-            value*: {Key-Value Pair JSON}
-        }
-        << or >>
-        attributes: {
-            type*: ‘list’
-            value*: ['value1',...]
-        }
-        << or >>
-        attributes: {
-            type*: 'single',
-            value*: ''
-        }
+        attributes: ['attribute1', 'attribute2=value2',...]
     }
 }
 ```
@@ -449,7 +436,7 @@ _The JSON for the above source definition is,_
     map: {
         type: 'json',
         options: [],
-        attributes: {}
+        attributes: []
     },
 }
 ```                   
@@ -477,7 +464,7 @@ _The JSON for the above sink definition is,_
     map: {
         type: 'json',
         options: [],
-        attributes: {}
+        attributes: []
     }
 }
 ```
