@@ -374,7 +374,7 @@ _The JSON for the above aggregation definition is,_
     id*: '',
     name*: '',
     scriptType*: 'JAVASCRIPT|R|SCALA',
-    returnType*: '',
+    returnType*: 'STRING|INT|LONG|DOUBLE|FLOAT|BOOL|OBJECT',
     body*: ''
 }
 ```
