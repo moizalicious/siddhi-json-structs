@@ -403,12 +403,12 @@ _The JSON for the above function definition is,_
 ```
 {
     id*: ‘’,
-    annotationType: 'SINK|SOURCE'
+    annotationType*: 'SINK|SOURCE'
     type*: ‘’,
-    options: {Key-Value Pair JSON},
+    options: ['option1', 'option2=value2',...],
     map: {
         type*: ‘’,
-        options: {Key-Value Pair JSON},
+        options: ['option1', 'option2=value2',...],
         attributes: {
             type*: ‘map’
             value*: {Key-Value Pair JSON}
@@ -445,13 +445,10 @@ _The JSON for the above source definition is,_
     id: '<UUID>',
     annotationType: 'SOURCE',
     type: 'http',
-    options: {
-        'receiver.url': 'http://localhost:8006/productionStream',
-        'basic.auth.enabled': 'false',
-    },
+    options: ["receiver.url = 'http://localhost:8006/productionStream'", "basic.auth.enabled = 'false'"],
     map: {
         type: 'json',
-        options: {},
+        options: [],
         attributes: {}
     },
 }
@@ -476,17 +473,10 @@ _The JSON for the above sink definition is,_
     id: '<UUID>',
     annotationType: 'SINK'
     type: 'http',
-    options: {
-        'publisher.url': 'http://localhost:8005/endpoint',
-        'method': 'POST',
-        'headers': 'Accept-Date:20/02/2017',
-        'basic.auth.username': 'admin',
-        'basic.auth.password': 'admin',
-        'basic.auth.enabled': 'true'
-    },
+    options: ["publisher.url = 'http://localhost:8005/endpoint'", "method = 'POST'", "headers = 'Accept-Date:20/02/2017'", "basic.auth.username = 'admin'", "basic.auth.password = 'admin'", "basic.auth.enabled = 'true'"],
     map: {
         type: 'json',
-        options: {},
+        options: [],
         attributes: {}
     }
 }
