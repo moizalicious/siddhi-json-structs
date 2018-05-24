@@ -507,7 +507,7 @@ Note that for this type there are a few conditions for each type even though the
 {
     type*: 'window|filter|projection',
     from*: '',
-    filterFunctionWindowList: {Query Filter/Function/Window}
+    filterFunctionWindowList: {Query Filter-Function-Window JSON}
 }
 ```
 
@@ -571,11 +571,7 @@ The `Join Element JSON` has the following structure:
 {
     type*: 'stream|table|window|aggregation|trigger',
     from*: '',
-    filter: '', // If there is a filter, there must be a window for joins (the only exception is when type = window).
-    window: {   
-        function*: '',
-        parameters*: ['value1',...]
-    },
+    filterFunctionWindowList: {Query Filter-Function-Window JSON} // If there is a filter, there must be a window for joins (the only exception is when type = window).
     as: '',
     isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time (either left definition|right definition|none)
 }
@@ -603,8 +599,7 @@ _The JSON for the above `Join Aggregation` input is,_
     left: {
         type: 'stream',
         from: 'StockStream',
-        filter: '',
-        window: {},
+        filterFunctionWindowList: [],
         as: 'S',
         isUnidirectional: false
     },
@@ -612,8 +607,7 @@ _The JSON for the above `Join Aggregation` input is,_
     right: {
         type: 'aggregation',
         from: 'TradeAggregation',
-        filter: '',
-        window: {},
+        filterFunctionWindowList: [],
         as: 'T',
         isUnidirectional: false
     },
@@ -632,7 +626,7 @@ The JSON structure for both patterns & sequences are identical:
         {
             conditionId*: '',
             streamName*: '',
-            filter: ''
+            filterFunctionWindowList: {Query Filter-Function-Window JSON}
         },
         ...
     ],
@@ -656,32 +650,62 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event1',
             streamName: 'InStream',
-            filter: 'age < 100'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age < 100'
+                }
+            ]
         },
         {
             conditionId: 'event2',
             streamName: 'InStream',
-            filter: 'age > 30'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age > 30'
+                }
+            ]
         },
         {
             conditionId: 'event3',
             streamName: 'InStream',
-            filter: 'age < 50'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age < 50'
+                }
+            ]
         },
         {
             conditionId: 'event4',
             streamName: 'InStream',
-            filter: 'age >= 18'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age >= 18'
+                }
+            ]
         },
         {
             conditionId: 'event5',
             streamName: 'InStream',
-            filter: 'age < 18'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age < 18'
+                }
+            ]
         },
         {
             conditionId: 'event6',
             streamName: 'InStream',
-            filter: 'age > 30'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age > 30'
+                }
+            ]
         }
     ],
     logic: 'every event1<21:234> within 10 min -> every event2 and event3 -> every not event4 for 5 sec -> every not event5 and event6'
@@ -696,12 +720,22 @@ _For an example:_
         {
             conditionId: 'e1',
             streamName*: 'InStream',
-            filter: 'age >= 18'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age >= 18'
+                }
+            ]
         },
         {
             conditionId: 'e2',
             streamName*: 'InStream',
-            filter: 'age < 30'
+            filterFunctionWindowList: [
+                {
+                    type: 'FILTER',
+                    value: 'age < 30'
+                }
+            ]
         }
     ],
     logic: 'every e1+ within 10 min, not e2 for 10 min'
