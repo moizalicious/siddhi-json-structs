@@ -6,7 +6,7 @@
     2. [Attributes](#attributes)
     3. [Annotations](#annotations)
     4. [Store](#store)  
-    5. [Query Filter-Function-Window](#query-filter-function-window)  
+    5. [Stream Handler](#stream-handler)  
 2. [Stream Definition](#stream-definition)
 3. [Table Definition](#table-definition)
 4. [Window Definition](#window-definition)
@@ -117,13 +117,13 @@ _The JSON for the above store definition is,_
 }
 ```                  
 
-### Query Filter-Function-Window
+### Stream Handler
 Streams in queries can have multiple filters and functions, but only one window.
 * If the query is of type `window-filter-projection`, then it's window can be placed anywhere in the input stream element section.
 * If the query is of type `join`, then it's last element in the input stream element must end with a Window (i.e. If the input stream element has atleast one function or filter).
 * If the query is of type `pattern & sequence`, then it's input stream element cannot have any window at all.
 
-The JSON structure (denoted as `filterFunctionWindowList` in other JSON structures) for an 
+The JSON structure (denoted as `streamHandlerList` in other JSON structures) for an 
 input stream element Filter/Function/Window in a query is given below,
 ```
 [
@@ -143,7 +143,7 @@ input stream element Filter/Function/Window in a query is given below,
 ]
 ```
 
-_**Example:** Consider the following `filterFunctionWindowList` of a plain `window-filter-projection` query_
+_**Example:** Consider the following `streamHandlerList` of a plain `window-filter-projection` query_
 ```
 from Instream[name == 'Mark']#window.time(10 min)#str:tokenize('<Test>', '<Test Regex>')
 select ...
@@ -507,7 +507,7 @@ Note that for this type there are a few conditions for each type even though the
 {
     type*: 'window|filter|projection',
     from*: '',
-    filterFunctionWindowList: {Query Filter-Function-Window JSON}
+    streamHandlerList: {Stream Handler JSON}
 }
 ```
 
@@ -521,7 +521,7 @@ _The JSON for the above `Window-Filter-Projection` input is,_
 {
     type: 'window',
     from: 'InputStream',
-    filterFunctionWindowList: [
+    streamHandlerList: [
         {
             type: 'FILTER',
             value: 'age >= 18'
@@ -571,7 +571,7 @@ The `Join Element JSON` has the following structure:
 {
     type*: 'stream|table|window|aggregation|trigger',
     from*: '',
-    filterFunctionWindowList: {Query Filter-Function-Window JSON} // If there is a filter, there must be a window for joins (the only exception is when type = window).
+    streamHandlerList: {Stream Handler JSON} // If there is a filter, there must be a window for joins (the only exception is when type = window).
     as: '',
     isUnidirectional: true|false // Only one 'isUnidirectional' value can be true at a time (either left definition|right definition|none)
 }
@@ -599,7 +599,7 @@ _The JSON for the above `Join Aggregation` input is,_
     left: {
         type: 'stream',
         from: 'StockStream',
-        filterFunctionWindowList: [],
+        streamHandlerList: [],
         as: 'S',
         isUnidirectional: false
     },
@@ -607,7 +607,7 @@ _The JSON for the above `Join Aggregation` input is,_
     right: {
         type: 'aggregation',
         from: 'TradeAggregation',
-        filterFunctionWindowList: [],
+        streamHandlerList: [],
         as: 'T',
         isUnidirectional: false
     },
@@ -626,7 +626,7 @@ The JSON structure for both patterns & sequences are identical:
         {
             conditionId*: '',
             streamName*: '',
-            filterFunctionWindowList: {Query Filter-Function-Window JSON}
+            streamHandlerList: {Stream Handler JSON}
         },
         ...
     ],
@@ -650,7 +650,7 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event1',
             streamName: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age < 100'
@@ -660,7 +660,7 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event2',
             streamName: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age > 30'
@@ -670,7 +670,7 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event3',
             streamName: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age < 50'
@@ -680,7 +680,7 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event4',
             streamName: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age >= 18'
@@ -690,7 +690,7 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event5',
             streamName: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age < 18'
@@ -700,7 +700,7 @@ _The above pattern input is defined by the following JSON structure:_
         {
             conditionId: 'event6',
             streamName: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age > 30'
@@ -720,7 +720,7 @@ _For an example:_
         {
             conditionId: 'e1',
             streamName*: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age >= 18'
@@ -730,7 +730,7 @@ _For an example:_
         {
             conditionId: 'e2',
             streamName*: 'InStream',
-            filterFunctionWindowList: [
+            streamHandlerList: [
                 {
                     type: 'FILTER',
                     value: 'age < 30'
