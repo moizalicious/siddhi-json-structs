@@ -403,7 +403,8 @@ _The JSON for the above function definition is,_
 ```
 {
     id*: ‘’,
-    annotationType*: 'SINK|SOURCE'
+    annotationType*: 'SINK|SOURCE',
+    connectedElementName*: '',
     type*: ‘’,
     options: ['option1', 'option2=value2',...],
     map: {
@@ -431,6 +432,7 @@ _The JSON for the above source definition is,_
 {
     id: '<UUID>',
     annotationType: 'SOURCE',
+    connectedElementName: '<StreamName||TriggerName>',
     type: 'http',
     options: ["receiver.url = 'http://localhost:8006/productionStream'", "basic.auth.enabled = 'false'"],
     map: {
@@ -458,7 +460,8 @@ _The JSON for the above sink definition is,_
 ```
 {
     id: '<UUID>',
-    annotationType: 'SINK'
+    annotationType: 'SINK',
+    connectedElementName: '<StreamName||TriggerName>',
     type: 'http',
     options: ["publisher.url = 'http://localhost:8005/endpoint'", "method = 'POST'", "headers = 'Accept-Date:20/02/2017'", "basic.auth.username = 'admin'", "basic.auth.password = 'admin'", "basic.auth.enabled = 'true'"],
     map: {
