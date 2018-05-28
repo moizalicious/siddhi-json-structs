@@ -1,0 +1,37 @@
+@App:name("ConversionTest")
+@App:description("Test the CodeGenerator and DesignGenerator classes")
+
+-- Definition Tests
+define stream InStream(name string, age int);
+define stream NewStream(name string, age int);
+
+define table InTable(name string, age int);
+
+define window InWindow(name string, age int) time(1 min);
+
+define trigger InTrigger at every 5 min;
+
+define aggregation InAggregation
+    from InStream
+    select name, avg(age) as avgAge
+    group by name
+    aggregate every min;
+
+define function concatFn[javascript] return string {
+    var str1 = data[0];
+    var str2 = data[1];
+    var str3 = data[2];
+    var responce = str1 + str2 + str3;
+    return responce;
+};
+
+-- Queries
+from InStream[age >= 18][age < 70]#window.time(10 min)[age < 30]#str:tokenize('string', 'regex')
+select *
+insert into OutStream1;
+
+from InStream[age >= 18][age < 70][age < 30]#str:tokenize('string', 'regex')#window.time(10 min) unidirectional
+    join NewStream
+    on InStream.name == NewStream.name
+    select InStream.name as name, avg(NewStream.age) as avgAge
+    insert into OutStream2;
