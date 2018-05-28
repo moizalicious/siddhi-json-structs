@@ -947,20 +947,11 @@ _The JSON for the above `update or insert into` function is,_
 ```
 {
     id*: ‘’,
-    members*: {
-        queryIds*: ['query1',...],
-        innerStreamIds: ['stream1',...] 
-    },
-    partitionWith*: {
-        type*: ‘{value|range}’,
-        expressions*: [
-            {
-                condition: ‘’,
-                streamId: ‘’
-            },
-            ...
-        ]
-    },
+    queryies*: [
+        {Query JSON},
+        ...
+    ],
+    partitionWith*: '',
     annotationList: {Annotation JSON Array}
 }
 ```
@@ -987,117 +978,11 @@ _The JSON for the above `partition` is,_
 ```
 {
     id: ‘TestPartition’,
-    members: {
-        queryIds: ['TestQuery1','TestQuery2'],
-        innerStreamIds: ['OutputStream'] 
-    },
-    partitionWith: {
-        type: ‘range’,
-        expressions: [
-            {
-                condition: ‘roomNo >= 1030 as \'serverRoom\'
-                    or roomNo < 1030 and roomNo >= 330 as \'officeRoom\'
-                    or roomNo < 330 as \'lobby\'’,
-                streamId: ‘TempStream’
-            }
-        ]
-    },
-    annotationList: [
-        {
-            name: ‘info’
-            type: ‘map’,
-            values: {
-                'name': 'TestPartition'  
-            }
-        }
-    ]
-}
-```
-_The JSON for `TestQuery1` is,_
-```
-{
-    id: 'TestQuery1',
-    queryInput: {
-        type: 'window_filter_projection',
-        from: 'TempStream',
-        filter: '',
-        window: {},
-        postWindowFilter: ''
-    },
-    select: {
-        type: 'all',
-        value: '*'
-    },
-    groupBy: [],
-    orderBy: [],
-    limit: '', 
-    having: '',
-    output: ''
-    queryOutput: {
-        type: 'insert',
-        eventType: '',
-        target: '#OutputStream'
-    },
-    annotationList: [
-        {
-            name: ‘info’
-            type: ‘map’,
-            values: {
-                'name': 'TestQuery1'  
-            }
-        }
-    ]
-}
-```
-_The JSON for `TestQuery2` is,_
-```
-{
-    id: 'TestQuery2',
-    queryInput: {
-        type: 'window_filter_projection',
-        from: 'TempStream',
-        filter: '',
-        window: {
-            function: 'time',
-            parameters: ['10 min'],
-        }
-        postWindowFilter: ''
-    },
-    select: {
-        type: 'user_defined',
-        value: [
-            {
-                expression: 'roomNo',
-                as: ''
-            },
-            {
-                expression: 'deviceID',
-                as: ''
-            },
-            {
-                expression: 'avg(Temp)',
-                as: 'avgTemp'
-            }
-        ]
-    },
-    groupBy: [],
-    orderBy: [],
-    limit: '',
-    having: '',
-    output: ''
-    queryOutput: {
-        type: 'insert',
-        eventType: '',
-        target: 'AreaTempStream'
-    },
-    annotationList: [
-        {
-            name: ‘info’
-            type: ‘map’,
-            values: {
-                'name': 'TestPartition'  
-            }
-        }
-    ]
+    queries: [
+        {TestQuery1 JSON},
+        {TestQuery2 JSON}
+    ],
+    partitionWith: 'roomNo >= 1030 as \'serverRoom\' or roomNo < 1030 and roomNo >= 330 as \'officeRoom\' or roomNo < 330 as \'lobby\' of TempStream',
+    annotationList: ['@info(name=\'TestPartition\')']
 }
 ```
