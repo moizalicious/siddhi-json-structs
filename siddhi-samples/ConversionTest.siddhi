@@ -2,7 +2,21 @@
 @App:description("Test the CodeGenerator and DesignGenerator classes")
 
 -- Definition Tests
+@Source(
+    type = 'http',
+    receiver.url='http://localhost:8006/productionStream',
+    basic.auth.enabled='false',
+    @map(type='json')
+)
+@sink(type='log')
 define stream InStream(name string, age int);
+@Source(
+    type = 'http',
+    receiver.url='http://localhost:8006/productionStream',
+    basic.auth.enabled='false',
+    @map(type='json')
+)
+@sink(type='log')
 define stream NewStream(name string, age int);
 
 define table InTable(name string, age int);
