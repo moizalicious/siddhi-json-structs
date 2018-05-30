@@ -947,7 +947,7 @@ _The JSON for the above `update or insert into` function is,_
 ```
 {
     id*: ‘’,
-    queryies*: [
+    queryList*: [
         {Query JSON},
         ...
     ],
@@ -978,7 +978,7 @@ _The JSON for the above `partition` is,_
 ```
 {
     id: ‘TestPartition’,
-    queries: [
+    queryList: [
         {TestQuery1 JSON},
         {TestQuery2 JSON}
     ],
