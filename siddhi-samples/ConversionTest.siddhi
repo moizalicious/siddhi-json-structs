@@ -1,29 +1,47 @@
 @App:name("ConversionTest")
 @App:description("Test the CodeGenerator and DesignGenerator classes")
 
--- Definition Tests
-@Source(
-    type = 'http',
-    receiver.url='http://localhost:8006/productionStream',
-    basic.auth.enabled='false',
-    @map(type='json')
-)
+@sink(type='email', @map(type='text') ,
+                    username ='<senders email user name>',
+                    address ='<senders email address>',
+                    password= '<senders email password>',
+                    subject='Test Siddhi-io-email-{{name}}',
+                    to='<receivers email address>',
+                    port = '465',
+                    host = 'smtp.gmail.com',
+                    ssl.enable = 'true',
+                    auth = 'true')
 @sink(type='log')
 define stream InStream(name string, age int);
-@Source(
-    type = 'http',
-    receiver.url='http://localhost:8006/productionStream',
-    basic.auth.enabled='false',
-    @map(type='json')
-)
+@sink(type='email', @map(type='text') ,
+                    username ='<senders email user name>',
+                    address ='<senders email address>',
+                    password= '<senders email password>',
+                    subject='Test Siddhi-io-email-{{name}}',
+                    to='<receivers email address>',
+                    port = '465',
+                    host = 'smtp.gmail.com',
+                    ssl.enable = 'true',
+                    auth = 'true')
 @sink(type='log')
 define stream NewStream(name string, age int);
+
+define table RoomOccupancyTable (roomNo int, people int);
+define stream UpdateStream (roomNumber int, arrival int, exit int);
+
+
+define table RoomTypeTable (roomNo int, type string);
+
+define stream DeleteStream (roomNumber int);
 
 define table InTable(name string, age int);
 
 define window InWindow(name string, age int) time(1 min);
 
 define trigger InTrigger at every 5 min;
+
+define table RoomAssigneeTable (roomNo int, type string, assignee string);
+define stream RoomAssigneeStream (roomNumber int, type string, assignee string);
 
 define aggregation InAggregation
     from InStream
@@ -49,3 +67,20 @@ from InStream[age >= 18][age < 70][age < 30]#str:tokenize('string', 'regex')#win
     on InStream.name == NewStream.name
     select InStream.name as name, avg(NewStream.age) as avgAge
     insert into OutStream2;
+
+from DeleteStream
+delete RoomTypeTable
+    on RoomTypeTable.roomNo == roomNumber;
+
+
+from UpdateStream
+select *
+update RoomOccupancyTable
+    set RoomOccupancyTable.people = RoomOccupancyTable.people + arrival - exit
+    on RoomOccupancyTable.roomNo == roomNumber;
+
+from RoomAssigneeStream
+select roomNumber as roomNo, type, assignee
+update or insert into RoomAssigneeTable
+    set RoomAssigneeTable.assignee = assignee
+    on RoomAssigneeTable.roomNo == roomNo;
