@@ -951,7 +951,13 @@ _The JSON for the above `update or insert into` function is,_
         {Query JSON},
         ...
     ],
-    partitionWith*: '',
+    partitionWith*: [
+        {
+            streamName*: '',
+            expression*: ''
+        },
+        ...
+    ],
     annotationList: {Annotation JSON Array}
 }
 ```
@@ -982,7 +988,12 @@ _The JSON for the above `partition` is,_
         {TestQuery1 JSON},
         {TestQuery2 JSON}
     ],
-    partitionWith: 'roomNo >= 1030 as \'serverRoom\' or roomNo < 1030 and roomNo >= 330 as \'officeRoom\' or roomNo < 330 as \'lobby\' of TempStream',
+    partitionWith: [
+        {
+            streamName: 'TempStream',
+            expression: 'roomNo >= 1030 as \'serverRoom\' or roomNo < 1030 and roomNo >= 330 as \'officeRoom\' or roomNo < 330 as \'lobby\''
+        }
+    ],
     annotationList: ['@info(name=\'TestPartition\')']
 }
 ```
