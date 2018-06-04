@@ -947,8 +947,10 @@ _The JSON for the above `update or insert into` function is,_
 ```
 {
     id*: ‘’,
-    queryList*: [
-        {Query JSON},
+    queryLists: [
+        {
+            '<queryType>': [{Query JSON},...]
+        },
         ...
     ],
     partitionWith*: [
@@ -984,14 +986,16 @@ _The JSON for the above `partition` is,_
 ```
 {
     id: ‘TestPartition’,
-    queryList: [
-        {TestQuery1 JSON},
-        {TestQuery2 JSON}
+    queryLists: [
+        {
+            '<queryType>': [{Query JSON},...]
+        },
+        ...
     ],
     partitionWith: [
         {
-            streamName: 'TempStream',
             expression: 'roomNo >= 1030 as \'serverRoom\' or roomNo < 1030 and roomNo >= 330 as \'officeRoom\' or roomNo < 330 as \'lobby\''
+            streamName: 'TempStream',
         }
     ],
     annotationList: ['@info(name=\'TestPartition\')']
