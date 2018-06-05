@@ -177,7 +177,6 @@ The JSON for the above example would look like this,
 {
     id*: '',
     name*: '',
-    isInnerStream*: true|false,
     attributeList*: {Attributes JSON Array},
     annotationList: {Annotations JSON Array}
 }
@@ -958,7 +957,7 @@ _The JSON for the above `update or insert into` function is,_
             streamName*: '',
             expression*: ''
         },
-        ...
+        ..
     ],
     annotationList: {Annotation JSON Array}
 }
@@ -992,6 +991,7 @@ _The JSON for the above `partition` is,_
         },
         ...
     ],
+    innerStreamList: ['StreamName1', 'StreamName2',...],
     partitionWith: [
         {
             expression: 'roomNo >= 1030 as \'serverRoom\' or roomNo < 1030 and roomNo >= 330 as \'officeRoom\' or roomNo < 330 as \'lobby\''
