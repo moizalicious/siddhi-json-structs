@@ -952,7 +952,7 @@ _The JSON for the above `update or insert into` function is,_
         },
         ...
     ],
-    innerStreamList: ['StreamName1', 'StreamName2',...],
+    innerStreamList: [{Stream Definition JSON},...],
     partitionWith*: [
         {
             streamName*: '',
@@ -992,7 +992,7 @@ _The JSON for the above `partition` is,_
         },
         ...
     ],
-    innerStreamList: ['#OutputStream'],
+    streamList: [{#OutputStream JSON}],
     partitionWith: [
         {
             expression: 'roomNo >= 1030 as \'serverRoom\' or roomNo < 1030 and roomNo >= 330 as \'officeRoom\' or roomNo < 330 as \'lobby\''
