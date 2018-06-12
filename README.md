@@ -317,14 +317,14 @@ _The JSON for the above trigger definition is,_
     groupBy: ['value1',...],
     aggregateByAttribute: '',
     aggregateByTimePeriod*: {
-        type: 'RANGE',
-        value: {
-            min: '',
-            max: ''
+        type*: 'RANGE',
+        value*: {
+            min*: '',
+            max*: ''
         }
         << or >>
-        type: 'INTERVAL',
-        value: ['sec', 'min', ...] // Atleast one value must be available
+        type*: 'INTERVAL',
+        value*: ['sec', 'min', ...] // Atleast one value must be available
     }, 
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
