@@ -316,7 +316,16 @@ _The JSON for the above trigger definition is,_
     select*: {Query Select JSON},
     groupBy: ['value1',...],
     aggregateByAttribute: '',
-    aggregateByTimePeriod*: ['sec', 'min', ...], // Atleast one value must be available
+    aggregateByTimePeriod*: {
+        type: 'RANGE',
+        value: {
+            min: '',
+            max: ''
+        }
+        << or >>
+        type: 'LIST',
+        value: ['sec', 'min', ...] // Atleast one value must be available
+    }, 
     store: {Store JSON},
     annotationList: {Annotations JSON Array}
 }
@@ -355,7 +364,13 @@ _The JSON for the above aggregation definition is,_
     },
     groupBy: ['symbol'],
     aggregateByAttribute: 'timestamp',
-    aggregateByTimePeriod: ['sec', 'min', 'hour', 'day', 'month', 'year'],
+    aggregateByTimePeriod: {
+        type: 'RANGE',
+        value: {
+            min: 'sec',
+            max: 'year'
+        }
+    },
     store: {},
     annotationList: []
 }
