@@ -323,7 +323,7 @@ _The JSON for the above trigger definition is,_
             max: ''
         }
         << or >>
-        type: 'LIST',
+        type: 'INTERVAL',
         value: ['sec', 'min', ...] // Atleast one value must be available
     }, 
     store: {Store JSON},
