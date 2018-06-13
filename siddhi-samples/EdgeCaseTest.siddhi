@@ -1,5 +1,7 @@
 @App:name("EdgeCaseTest")
 @App:description("Test As Many Situations As Possible For The Editor Drag-And-Drop Implementation")
+@app:statistics(reporter = 'console')
+@app:playback(idle.time = '100 millisecond', increment = '2 sec')
 
 -- Other Inputs
 define stream TradeStream (symbol string, price double, volume long, timestamp long);
@@ -10,11 +12,20 @@ define aggregation TradeAggregation
     aggregate by timestamp every sec ... year;
 define stream StockStream (symbol string, value int);
 define stream TempStream(deviceID long, roomNo int, temp double);
+define table TempTable(deviceID long, roomNo int, temp double);
 define stream RegulatorStream(deviceID long, roomNo int, isOn bool);
 define table RoomTypeTable (roomNo int, type string);
 define stream TempStream (deviceID long, roomNo int, temp double);
 define window TwoMinTempWindow (roomNo int, temp double) time(2 min);
 define stream CheckStream (requestId string);
+define table RoomTypeTable (roomNo int, type string);
+define stream DeleteStream (roomNumber int);
+define table RoomOccupancyTable (roomNo int, people int);
+define stream UpdateStream (roomNumber int, arrival int, exit int);
+define table RoomAssigneeTable (roomNo int, type string, assignee string);
+define stream RoomAssigneeStream (roomNumber int, type string, assignee string);
+define table ServerRoomTable (roomNo int);
+define stream TempStream (deviceID long, roomNo int, temp double);
 
 -- Test Stream (Source & Sink)
 @source(type='email' , username='option_value',password='option_value',folder.to.move='option_value', @map(type='json'))
@@ -86,9 +97,33 @@ insert into HighTempCountStream;
 
 -- Test Pattern Query
 -- Test Sequence Query
--- Test Query Select
+
 -- Test Query Insert Output
+from TempStream
+select *
+insert into TempTable;
+
 -- Test Query Delete Output
+from DeleteStream
+delete RoomTypeTable
+    on RoomTypeTable.roomNo == roomNumber;
+
 -- Test Query Update Output
+from UpdateStream
+select *
+update RoomOccupancyTable
+    set RoomOccupancyTable.people = RoomOccupancyTable.people + arrival - exit
+    on RoomOccupancyTable.roomNo == roomNumber;
+
 -- Test Update or Insert Into Output
+from RoomAssigneeStream
+select roomNumber as roomNo, type, assignee
+update or insert into RoomAssigneeTable
+    set RoomAssigneeTable.assignee = assignee
+    on RoomAssigneeTable.roomNo == roomNo;
+
+-- Test 'in' Keyword
+from TempStream[ServerRoomTable.roomNo == roomNo in ServerRoomTable]
+insert into ServerRoomTempStream2;
+
 -- Test Partition
