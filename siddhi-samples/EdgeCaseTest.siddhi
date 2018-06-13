@@ -1,0 +1,94 @@
+@App:name("EdgeCaseTest")
+@App:description("Test As Many Situations As Possible For The Editor Drag-And-Drop Implementation")
+
+-- Other Inputs
+define stream TradeStream (symbol string, price double, volume long, timestamp long);
+define aggregation TradeAggregation
+  from TradeStream
+  select symbol, avg(price) as avgPrice, sum(price) as total
+    group by symbol
+    aggregate by timestamp every sec ... year;
+define stream StockStream (symbol string, value int);
+define stream TempStream(deviceID long, roomNo int, temp double);
+define stream RegulatorStream(deviceID long, roomNo int, isOn bool);
+define table RoomTypeTable (roomNo int, type string);
+define stream TempStream (deviceID long, roomNo int, temp double);
+define window TwoMinTempWindow (roomNo int, temp double) time(2 min);
+define stream CheckStream (requestId string);
+
+-- Test Stream (Source & Sink)
+@source(type='email' , username='option_value',password='option_value',folder.to.move='option_value', @map(type='json'))
+@primaryKey('name')
+@sink(type='log')
+define stream TestStream1(name string, age int);
+define stream TestStream2(val1 int, val2 long, val3 double, val4 float, val5 string, val6 bool, val7 object);
+
+-- Test Table
+@store(type='rdbms' , jdbc.url='option_value',username='option_value',password='option_value',jdbc.driver.name='option_value')
+@primaryKey('name')
+define table TestTable1(name string);
+
+-- Test Window
+@async(buffer.size='64')
+define window TestWindow1(name string) time(1 hour);
+
+-- Test Trigger
+define trigger TestTrigger1 at every 2 hours;
+
+-- Test Aggregation
+@store(type='rdbms' , jdbc.url='option_value',username='option_value',password='option_value',jdbc.driver.name='option_value')
+define aggregation TestAggregation1
+    from TestStream1
+    select name, avg(age) as avgAge
+    group by name
+    aggregate every hour, sec;
+
+-- Test Function
+define function TestFunction[JavaScript] return bool {
+    var boolIn1 = data[0];
+    return boolIn1;
+};
+
+-- Test Window-Filter-Projection Query
+from TestStream1[age > 18]#window.time(10 min)[age < 30][name == "mark"]
+select name, convert(age, 'string') as ageStr
+group by name
+having ageStr == '20'
+order by name
+limit 500
+output every 10 min
+insert into OutStream1;
+
+-- Test Join Query
+from StockStream as S join TradeAggregation as T
+  on S.symbol == T.symbol
+  within "2014-02-15 00:00:00 +05:30", "2014-03-16 00:00:00 +05:30"
+  per "days"
+select S.symbol, T.total, T.avgPrice
+insert into AggregateStockStream;
+
+from TempStream[temp > 30.0]#window.time(1 min) as T
+  join RegulatorStream[isOn == false]#window.length(1) as R
+  on T.roomNo == R.roomNo
+select T.roomNo, R.deviceID, 'start' as action
+insert into RegulatorActionStream;
+
+from TempStream join RoomTypeTable
+    on RoomTypeTable.roomNo == TempStream.roomNo
+select deviceID, RoomTypeTable.type as roomType, type, temp
+    having roomType == 'server-room'
+insert into ServerRoomTempStream;
+
+from CheckStream as C join TwoMinTempWindow as T
+    on T.temp > 40
+select requestId, count(T.temp) as count
+insert into HighTempCountStream;
+
+-- Test Pattern Query
+-- Test Sequence Query
+-- Test Query Select
+-- Test Query Insert Output
+-- Test Query Delete Output
+-- Test Query Update Output
+-- Test Update or Insert Into Output
+-- Test Partition
