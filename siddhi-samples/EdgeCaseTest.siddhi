@@ -13,7 +13,7 @@ define aggregation TradeAggregation
 define stream StockStream (symbol string, value int);
 define stream TempStream(deviceID long, roomNo int, temp double);
 define table TempTable(deviceID long, roomNo int, temp double);
-define stream RegulatorStream(deviceID long, roomNo int, isOn bool);
+define stream RegulatorStream(deviceID long, roomNo int, isOn bool);\
 define table RoomTypeTable (roomNo int, type string);
 define stream TempStream (deviceID long, roomNo int, temp double);
 define window TwoMinTempWindow (roomNo int, temp double) time(2 min);
