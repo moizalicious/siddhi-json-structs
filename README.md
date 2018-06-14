@@ -417,8 +417,16 @@ _The JSON for the above function definition is,_
     options: ['option1', 'option2=value2',...],
     map: {
         type*: ‘’,
-        options: ['option1', 'option2=value2',...],
-        attributes: ['attribute1', 'attribute2=value2',...]
+        options: {Key-Value Pair JSON},
+        attributes: {
+            type*: ‘MAP’
+            value*: {Key-Value Pair JSON}
+        }
+        << or >>
+        attributes: {
+            type*: ‘LIST’
+            value*: ['value1',...]
+        }
     }
 }
 ```
