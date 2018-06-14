@@ -417,15 +417,16 @@ _The JSON for the above function definition is,_
     options: ['option1', 'option2=value2',...],
     map: {
         type*: ‘’,
-        payloadOrAttribute: 'PAYLOAD|ATTRIBUTE'
         options: {Key-Value Pair JSON},
-        payloadOrAttributeBody: {
-            type*: ‘MAP’
+        payloadOrAttribute: {
+            annotationType: 'PAYLOAD|ATTRIBUTE',
+            type*: ‘MAP’,
             value*: {Key-Value Pair JSON}
         }
         << or >>
-        payloadOrAttributeBody: {
-            type*: ‘LIST’
+        payloadOrAttribute: {
+            annotationType: 'PAYLOAD|ATTRIBUTE',
+            type*: ‘LIST’,
             value*: ['value1',...]
         }
     }
