@@ -886,7 +886,7 @@ _The JSON for the above `insert` function is,_
 ```
 {
     eventType: 'current_events|expired_events|all_events',
-    set*: [
+    set: [
         {
             attribute*: '',
             value*: ''
@@ -926,7 +926,7 @@ _The JSON for the above `update` function is,_
 ```
 {
     eventType: 'current_events|expired_events|all_events',
-    set*: [
+    set: [
         {
             attribute*: '',
             value*: ''
