@@ -136,7 +136,7 @@ input stream element Filter/Function/Window in a query is given below,
         type*: 'FUNCTION|WINDOW',
         value*: {
             function*: '',
-            parameters*: ['value1',...],
+            parameters: ['value1',...],
         }
     },
     ...
